@@ -1,7 +1,8 @@
 "use strict";
 /* ============================================================
    AilatiditaliA — logica della pagina (vanilla JavaScript).
-   Dati, grafici SVG, gauges, tabelle ordinabili, accordion, tema.
+   Dati, filtro d'intervallo, grafici SVG, gauges, giudizio,
+   tabelle ordinabili, accordion, tema.
    Fonte di verità dei valori: efficacia_governi_italiani_1900_2025.md (v2.1).
    ============================================================ */
 
@@ -35,7 +36,7 @@ const T1 = [
  {a:2025,g:"Meloni",c:"Centrodestra (FdI, Lega, FI, NM)",pop:58.9,pil:null,pc:null,v:14.5,d:137.1,stima:true},
 ];
 const GOV = {}; T1.forEach(r=>GOV[r.a]=r.g+" — "+r.c);
-const PC_EXTRA = [{a:2022,pc:36224}];           // ultimo dato Maddison
+const PC_EXTRA = [{a:2007,pc:36311},{a:2008,pc:35943},{a:2022,pc:36224}]; // punti fuori griglia (picco 2007, 2008, ultimo Maddison)
 const DEB_EXTRA = [{a:2022,d:138.4},{a:2024,d:134.7}];
 const ERE = [
  [1900,1922,"Liberali"],[1922,1943,"Fascismo"],[1943,1946,""],
@@ -66,6 +67,7 @@ const PRIV_GOV = {1992:"Governi: Amato I",1993:"Governi: Amato I / Ciampi",1994:
 
 /* ============ giudizio per area politica ============ */
 /* Metriche per finestra (dalle tabelle della pagina):
+   p0/p1 = periodo dell'area (per il filtro d'intervallo)
    cres  = variazione media del PIL pro capite per quinquennio (%)
    deb   = variazione del debito/PIL in punti (negativo = migliora)
    istr  = progresso educativo in p.p. per quinquennio (fino al 1951:
@@ -76,18 +78,18 @@ const PRIV_GOV = {1992:"Governi: Amato I",1993:"Governi: Amato I / Ciampi",1994:
            3 = massime, ~94 mld € 1992-2000) — contate come negative
    fuori = esclusa dalla classifica (finestra troppo breve)              */
 const AREE_GIUDIZIO = [
- {n:"Liberali giolittiani (1900–1914)", breve:"Liberali giolittiani", cres:8.3, deb:-26, istr:5.5, crim:null, asset:0},
- {n:"Guerra e crisi liberale (1915–1922)", breve:"Guerra e crisi liberale", cres:-0.5, deb:75, istr:5.3, crim:null, asset:0},
- {n:"Fascismo (1922–1943)", breve:"Fascismo", cres:-2.5, deb:-2, istr:2.4, crim:null, asset:2},
- {n:"Centrismo DC (1945–1962)", breve:"Centrismo DC", cres:52.4, deb:-42, istr:3.0, crim:-3.5, asset:0},
- {n:"Centrosinistra organico (1962–1976)", breve:"Centrosinistra organico", cres:22.3, deb:29, istr:3.1, crim:131.6, asset:0},
- {n:"Solidarietà naz. e pentapartito (1976–1992)", breve:"Pentapartito", cres:15.1, deb:49, istr:4.2, crim:224.6, asset:2},
- {n:"Tecnici e Ulivo (1992–2001)", breve:"Tecnici e Ulivo", cres:12.2, deb:-13, istr:7.9, crim:-11.8, asset:3},
- {n:"Centrodestra berlusconiano (2001–2011)", breve:"Centrodestra berlusconiano", cres:3.2, deb:10, istr:5.0, crim:18.8, asset:2},
- {n:"Monti, larghe intese e governi PD (2011–2018)", breve:"Larghe intese e governi PD", cres:-3.3, deb:15, istr:3.8, crim:-12.2, asset:1},
- {n:"Governi Conte I e II (2018–2021)", breve:"Governi Conte", cres:-3.7, deb:19, istr:2.7, crim:-8.6, asset:0},
- {n:"Unità nazionale (2021–2022)", breve:"Unità nazionale", cres:11.9, deb:-16, istr:null, crim:7.2, asset:0, fuori:true},
- {n:"Centrodestra Meloni (2022–2025)", breve:"Centrodestra Meloni", cres:3.7, deb:-1.3, istr:4.4, crim:6.4, asset:1},
+ {n:"Liberali giolittiani (1900–1914)", breve:"Liberali giolittiani", p0:1900,p1:1914, cres:8.3, deb:-26, istr:5.5, crim:null, asset:0},
+ {n:"Guerra e crisi liberale (1915–1922)", breve:"Guerra e crisi liberale", p0:1915,p1:1922, cres:-0.5, deb:75, istr:5.3, crim:null, asset:0},
+ {n:"Fascismo (1922–1943)", breve:"Fascismo", p0:1922,p1:1943, cres:-2.5, deb:-2, istr:2.4, crim:null, asset:2},
+ {n:"Centrismo DC (1945–1962)", breve:"Centrismo DC", p0:1945,p1:1962, cres:52.4, deb:-42, istr:3.0, crim:-3.5, asset:0},
+ {n:"Centrosinistra organico (1962–1976)", breve:"Centrosinistra organico", p0:1962,p1:1976, cres:22.3, deb:29, istr:3.1, crim:131.6, asset:0},
+ {n:"Solidarietà naz. e pentapartito (1976–1992)", breve:"Pentapartito", p0:1976,p1:1992, cres:15.1, deb:49, istr:4.2, crim:224.6, asset:2},
+ {n:"Tecnici e Ulivo (1992–2001)", breve:"Tecnici e Ulivo", p0:1992,p1:2001, cres:12.2, deb:-13, istr:7.9, crim:-11.8, asset:3},
+ {n:"Centrodestra berlusconiano (2001–2011)", breve:"Centrodestra berlusconiano", p0:2001,p1:2011, cres:3.2, deb:10, istr:5.0, crim:18.8, asset:2},
+ {n:"Monti, larghe intese e governi PD (2011–2018)", breve:"Larghe intese e governi PD", p0:2011,p1:2018, cres:-3.3, deb:15, istr:3.8, crim:-12.2, asset:1},
+ {n:"Governi Conte I e II (2018–2021)", breve:"Governi Conte", p0:2018,p1:2021, cres:-3.7, deb:19, istr:2.7, crim:-8.6, asset:0},
+ {n:"Unità nazionale (2021–2022)", breve:"Unità nazionale", p0:2021,p1:2022, cres:11.9, deb:-16, istr:null, crim:7.2, asset:0, fuori:true},
+ {n:"Centrodestra Meloni (2022–2025)", breve:"Centrodestra Meloni", p0:2022,p1:2025, cres:3.7, deb:-1.3, istr:4.4, crim:6.4, asset:1},
 ];
 /* categorie: chiave, etichetta, direzione (1 = più alto è meglio), peso, formato */
 const CAT_GIUDIZIO = [
@@ -97,89 +99,14 @@ const CAT_GIUDIZIO = [
  {k:"crim", lab:"Criminalità", dir:-1, w:15, f:v=>(v>0?"+":"")+fmt(v,1)+"%", desc:"variazione dei delitti denunciati"},
  {k:"asset", lab:"Cessioni di asset", dir:-1, w:15, f:v=>"malus "+fmt(v), desc:"scala delle cessioni (0–3)"},
 ];
-/* punteggio 0-10 per ranghi (pari merito condiviso); pesi ridistribuiti sulle categorie disponibili */
-function computeGiudizio(){
-  const inGara=AREE_GIUDIZIO.filter(a=>!a.fuori);
-  const points={};
-  inGara.forEach(a=>points[a.n]={});
-  for(const c of CAT_GIUDIZIO){
-    const has=inGara.filter(a=>a[c.k]!=null);
-    const sorted=[...has].sort((x,y)=>(y[c.k]-x[c.k])*c.dir);
-    // rango medio per i pari merito
-    sorted.forEach((a,i)=>{
-      const ties=sorted.filter(b=>b[c.k]===a[c.k]);
-      const first=sorted.findIndex(b=>b[c.k]===a[c.k]);
-      const rank=first+(ties.length-1)/2;
-      points[a.n][c.k]=has.length>1 ? 10*(has.length-1-rank)/(has.length-1) : 10;
-    });
-  }
-  return AREE_GIUDIZIO.map(a=>{
-    if(a.fuori) return {...a, score:null, pts:{}};
-    let num=0, den=0;
-    for(const c of CAT_GIUDIZIO){
-      if(a[c.k]==null) continue;
-      num+=c.w*points[a.n][c.k]; den+=c.w;
-    }
-    return {...a, score:den?num/den:null, pts:points[a.n]};
-  }).sort((x,y)=>(y.score??-1)-(x.score??-1));
-}
-function buildGiudizio(){
-  const bestBox=document.getElementById("best-cards");
-  const podioBox=document.getElementById("podio");
-  const rankBody=document.getElementById("rank-body");
-  if(!bestBox||!podioBox||!rankBody) return;
-  const ranked=computeGiudizio();
-  // migliori per categoria (giudizio universale)
-  for(const c of CAT_GIUDIZIO){
-    const has=AREE_GIUDIZIO.filter(a=>!a.fuori&&a[c.k]!=null);
-    const best=has.reduce((m,a)=>((a[c.k]-m[c.k])*c.dir>0?a:m));
-    const tied=has.filter(a=>a[c.k]===best[c.k]);
-    const card=div("tile best-card",bestBox);
-    const l=div("lbl",card); l.textContent="Migliore: "+c.lab.toLowerCase();
-    const v=div("best-name",card); v.textContent=best.breve;
-    const d=div("delta",card);
-    d.textContent=c.f(best[c.k])+" · "+c.desc+
-      (tied.length>1?" · a pari merito con "+(tied.length-1)+" altre aree":"");
-  }
-  // podio ponderato
-  ranked.filter(a=>a.score!=null).slice(0,3).forEach((a,i)=>{
-    const card=div("tile podio-card"+(i===0?" primo":""),podioBox);
-    const pos=div("pos",card); pos.textContent=(i+1)+"º";
-    const nm=div("best-name",card); nm.textContent=a.n;
-    const sc=div("delta",card); sc.textContent="punteggio ponderato "+fmt(a.score,1)+" / 10";
-  });
-  // classifica completa
-  ranked.forEach((a,i)=>{
-    const tr=document.createElement("tr");
-    const cells=[a.score!=null?`${i+1}º · ${a.n}`:a.n];
-    for(const c of CAT_GIUDIZIO) cells.push(a[c.k]==null?"N/D":c.f(a[c.k]));
-    cells.push(a.score!=null?fmt(a.score,1):"fuori classifica");
-    cells.forEach((t,j)=>{
-      const td=document.createElement("td");
-      if(j>0)td.className="n";
-      td.textContent=t;
-      if(j>0&&j<=CAT_GIUDIZIO.length){const c=CAT_GIUDIZIO[j-1];
-        if(a[c.k]!=null)td.dataset.sort=String(a[c.k]);}
-      if(j===CAT_GIUDIZIO.length+1&&a.score!=null)td.dataset.sort=String(a.score);
-      tr.appendChild(td);
-    });
-    rankBody.appendChild(tr);
-  });
-}
 
-/* gauges tematici in testata: value su scala [min,max] */
-const GAUGES = [
- {label:"Recupero del picco 2007", value:99.8, min:0, max:100, txt:"99,8%",
-  sub:"PIL pro capite 2022 (36.224 $) vs picco 2007 (36.311 $)"},
- {label:"Debito pubblico 2025", value:137.1, min:0, max:160, txt:"137,1%",
-  sub:"in % del PIL (+2,4 p.p. sul 2024, effetto Superbonus) · scala 0–160, max storico 159,7 (1920)"},
- {label:"Istruzione 2025", value:67.0, min:0, max:100, txt:"67,0%",
-  sub:"25–64enni con almeno un diploma (32,6% nel 1992)"},
- {label:"Delitti 2024 vs massimo 2015", value:89.3, min:0, max:100, txt:"89,3%",
-  sub:"2.399 mila nel 2024 · massimo della serie: 2.687 mila (2015)"},
- {label:"Reddito reale vs 2006", value:90, min:0, max:100, txt:"90%",
-  sub:"reddito familiare medio reale 2022 vs 2006: −10% (SHIW, Banca d'Italia)"},
-];
+/* ============ intervallo di analisi ============ */
+const RANGE={from:1900,to:2025};
+const FULL={from:1900,to:2025};
+const inR = a => a>=RANGE.from && a<=RANGE.to;
+const filtPts = arr => arr.filter(p=>p[0]==null||inR(p[0]));
+function lastIn(arr){let r=null;for(const p of arr){if(p[0]!=null&&inR(p[0]))r=p;}return r;}
+function maxIn(arr){let r=null;for(const p of arr){if(p[0]!=null&&inR(p[0])&&(r==null||p[1]>r[1]))r=p;}return r;}
 
 /* ============ util ============ */
 const css = v => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
@@ -191,6 +118,7 @@ const fmt = (n,dec=0) => {
 const NS = "http://www.w3.org/2000/svg";
 function el(name,attrs,parent){const e=document.createElementNS(NS,name);for(const k in attrs)e.setAttribute(k,attrs[k]);if(parent)parent.appendChild(e);return e;}
 function div(cls,parent){const d=document.createElement("div");if(cls)d.className=cls;if(parent)parent.appendChild(d);return d;}
+function emptyMsg(host){const m=div("chart-empty",host);m.textContent="Nessun dato nell'intervallo selezionato ("+RANGE.from+"–"+RANGE.to+").";}
 function niceTicks(min,max,n=5){
   const span=max-min; if(!(span>0)) return [min];
   const step0=span/n, mag=Math.pow(10,Math.floor(Math.log10(step0)));
@@ -202,20 +130,23 @@ function niceTicks(min,max,n=5){
 /* ============ grafico a linee ============ */
 function lineChart(id, cfg){
   const host=document.getElementById(id); if(!host)return;
+  const x0=Math.max(cfg.x0,RANGE.from), x1=Math.min(cfg.x1,RANGE.to);
+  const series=cfg.series.map(s=>({...s,data:filtPts(s.data)}));
+  const hasData=series.some(s=>s.data.some(p=>p[0]!=null));
+  if(x1-x0<1||!hasData){emptyMsg(host);return;}
   const W=cfg.w||940, H=cfg.h||380, M={t:20,r:cfg.mr||150,b:34,l:46};
-  const legendBox=cfg.series.length>1 ? div("legend") : null;
+  const legendBox=series.length>1 ? div("legend") : null;
   if(legendBox){ host.parentNode.insertBefore(legendBox, host);
-    cfg.series.forEach(s=>{const it=div("it",legendBox);const k=document.createElement("span");
+    series.forEach(s=>{const it=div("it",legendBox);const k=document.createElement("span");
       k.className="key";k.style.background=css(s.color);it.appendChild(k);
       it.appendChild(document.createTextNode(s.name));});}
   const svg=el("svg",{viewBox:`0 0 ${W} ${H}`,role:"img","aria-label":cfg.aria||""},host);
-  const x0=cfg.x0, x1=cfg.x1;
   const ymin=cfg.ymin??0, ymax=cfg.ymax;
   const X=a=>M.l+(a-x0)/(x1-x0)*(W-M.l-M.r);
   const Y=v=>H-M.b-(v-ymin)/(ymax-ymin)*(H-M.t-M.b);
   // fasce delle ere
   if(cfg.ere){ let i=0; for(const [a,b,lab] of ERE){
-      if(b<x0||a>x1)continue;
+      if(b<x0||a>x1){i++;continue;}
       const xa=X(Math.max(a,x0)), xb=X(Math.min(b,x1));
       if(i%2===0) el("rect",{x:xa,y:M.t,width:xb-xa,height:H-M.t-M.b,fill:css("--wash-a")},svg);
       if(lab && xb-xa>lab.length*5.6+8) el("text",{x:(xa+xb)/2,y:M.t+12,"text-anchor":"middle","font-size":10.5,fill:css("--ink-3")},svg).textContent=lab;
@@ -226,16 +157,17 @@ function lineChart(id, cfg){
     el("text",{x:M.l-8,y:Y(t)+4,"text-anchor":"end","font-size":11,fill:css("--ink-3"),"font-variant-numeric":"tabular-nums"},svg).textContent=fmt(t,cfg.ydec||0);
   }
   el("line",{x1:M.l,x2:W-M.r,y1:Y(ymin),y2:Y(ymin),stroke:css("--axis"),"stroke-width":1},svg);
-  const xstep=cfg.xstep||10;
+  const span=x1-x0;
+  const xstep=span<=30?5:(span<=70?10:(cfg.xstep||10));
   for(let a=Math.ceil(x0/xstep)*xstep;a<=x1;a+=xstep)
     el("text",{x:X(a),y:H-M.b+18,"text-anchor":"middle","font-size":11,fill:css("--ink-3"),"font-variant-numeric":"tabular-nums"},svg).textContent=a;
   // linee di rottura
-  (cfg.breaks||[]).forEach(([a,lab])=>{
+  (cfg.breaks||[]).filter(b=>inR(b[0])).forEach(([a,lab])=>{
     el("line",{x1:X(a),x2:X(a),y1:M.t,y2:H-M.b,stroke:css("--axis"),"stroke-width":1},svg);
     el("text",{x:X(a)+4,y:M.t+12,"font-size":10,fill:css("--ink-3")},svg).textContent=lab;
   });
   // serie
-  cfg.series.forEach(s=>{
+  series.forEach(s=>{
     const col=css(s.color); let d="",pen=false;
     for(const p of s.data){
       if(p[0]==null){pen=false;continue;}
@@ -245,11 +177,12 @@ function lineChart(id, cfg){
     for(const p of s.data){ if(p[0]==null)continue;
       el("circle",{cx:X(p[0]),cy:Y(p[1]),r:3.4,fill:col,stroke:css("--surface-1"),"stroke-width":2},svg);}
     const last=[...s.data].reverse().find(p=>p[0]!=null);
+    if(!last)return;
     const lbl=el("text",{x:X(last[0])+9,y:Y(last[1])+4,"font-size":11.5,fill:css("--ink-2")},svg);
-    lbl.textContent=(cfg.series.length>1?(s.short||s.name)+" ":"")+fmt(last[1],s.dec??cfg.ydec??0)+(s.unit||cfg.unit||"");
+    lbl.textContent=(series.length>1?(s.short||s.name)+" ":"")+fmt(last[1],s.dec??cfg.ydec??0)+(s.unit||cfg.unit||"");
   });
   // annotazioni
-  (cfg.notes||[]).forEach(n=>{
+  (cfg.notes||[]).filter(n=>inR(n.a)).forEach(n=>{
     el("circle",{cx:X(n.a),cy:Y(n.v),r:4.5,fill:"none",stroke:css("--ink-3"),"stroke-width":1.2},svg);
     el("text",{x:X(n.a)+(n.dx??7),y:Y(n.v)+(n.dy??-8),"font-size":10.5,fill:css("--ink-2")},svg).textContent=n.t;
   });
@@ -257,7 +190,7 @@ function lineChart(id, cfg){
   const wrap=host; wrap.style.position="relative";
   const tip=div("tooltip",wrap);
   const cross=el("line",{y1:M.t,y2:H-M.b,stroke:css("--axis"),"stroke-width":1,opacity:0},svg);
-  const xs=[...new Set(cfg.series.flatMap(s=>s.data.filter(p=>p[0]!=null).map(p=>p[0])))].sort((a,b)=>a-b);
+  const xs=[...new Set(series.flatMap(s=>s.data.filter(p=>p[0]!=null).map(p=>p[0])))].sort((a,b)=>a-b);
   function onmove(ev){
     const pt=svg.createSVGPoint(); pt.x=ev.clientX; pt.y=ev.clientY;
     const p=pt.matrixTransform(svg.getScreenCTM().inverse());
@@ -265,7 +198,7 @@ function lineChart(id, cfg){
     cross.setAttribute("x1",X(best)); cross.setAttribute("x2",X(best)); cross.setAttribute("opacity",.8);
     tip.textContent="";
     const t1=div("tt-title",tip); t1.textContent=best;
-    cfg.series.forEach(s=>{
+    series.forEach(s=>{
       const hit=s.data.find(q=>q[0]===best); if(!hit)return;
       const row=div("row",tip); const k=document.createElement("span");
       k.className="key"; k.style.background=css(s.color); row.appendChild(k);
@@ -287,11 +220,12 @@ function lineChart(id, cfg){
 /* ============ grafico a barre ============ */
 function barChart(id,cfg){
   const host=document.getElementById(id); if(!host)return;
+  const data=cfg.data.filter(d=>inR(d.a));
+  if(!data.length){emptyMsg(host);return;}
   const W=cfg.w||940,H=cfg.h||360,M={t:26,r:20,b:34,l:52};
   const svg=el("svg",{viewBox:`0 0 ${W} ${H}`,role:"img","aria-label":cfg.aria||""},host);
-  const data=cfg.data;
   const ymin=cfg.ymin??Math.min(0,...data.map(d=>d.v)), ymax=cfg.ymax??Math.max(...data.map(d=>d.v));
-  const Y=v=>H-M.b-(v-ymin)/(ymax-ymin)*(H-M.t-M.b);
+  const Y=v=>H-M.b-(v-ymin)/(ymax-ymin||1)*(H-M.t-M.b);
   const slot=(W-M.l-M.r)/data.length, bw=Math.min(24,slot-4);
   for(const t of niceTicks(ymin,ymax,cfg.yn||5)){
     el("line",{x1:M.l,x2:W-M.r,y1:Y(t),y2:Y(t),stroke:css("--grid"),"stroke-width":1},svg);
@@ -333,26 +267,157 @@ function barChart(id,cfg){
   });
 }
 
-/* ============ gauges ============ */
+/* ============ gauges (ricalcolati sull'intervallo) ============ */
+function computeGauges(){
+  const out=[];
+  // 1. PIL pro capite: ultimo valore vs picco dell'intervallo
+  const pcSeries=T1.filter(r=>r.pc!=null).map(r=>[r.a,r.pc])
+    .concat(PC_EXTRA.map(r=>[r.a,r.pc])).sort((a,b)=>a[0]-b[0]);
+  const pcLast=lastIn(pcSeries), pcMax=maxIn(pcSeries);
+  if(pcLast&&pcMax){
+    const atPeak=pcLast[0]===pcMax[0];
+    out.push({label:atPeak?("PIL pro capite al massimo nel "+pcLast[0]):("Recupero del picco "+pcMax[0]),
+      value:pcLast[1]/pcMax[1]*100, min:0, max:100, txt:fmt(pcLast[1]/pcMax[1]*100,1)+"%",
+      sub:"PIL pro capite "+pcLast[0]+" ("+fmt(pcLast[1])+" $)"+(atPeak?" · massimo dell'intervallo":" vs picco "+pcMax[0]+" ("+fmt(pcMax[1])+" $)")});
+  } else out.push({nd:true,label:"PIL pro capite",sub:"nessun dato nell'intervallo"});
+  // 2. debito: ultimo valore dell'intervallo
+  const debSeries=T1.map(r=>[r.a,r.d]).concat(DEB_EXTRA.map(r=>[r.a,r.d])).sort((a,b)=>a[0]-b[0]);
+  const debLast=lastIn(debSeries);
+  if(debLast) out.push({label:"Debito pubblico "+debLast[0], value:debLast[1], min:0, max:160,
+    txt:fmt(debLast[1],1)+"%", sub:"in % del PIL · scala 0–160, max storico 159,7 (1920)"});
+  else out.push({nd:true,label:"Debito pubblico",sub:"nessun dato nell'intervallo"});
+  // 3. istruzione: ultima serie disponibile nell'intervallo
+  const eurLast=lastIn(ISTR.eur), dipLast=lastIn(ISTR.dip), anLast=lastIn(ISTR.analf);
+  if(eurLast) out.push({label:"Istruzione "+eurLast[0], value:eurLast[1], min:0, max:100,
+    txt:fmt(eurLast[1],1)+"%", sub:"25–64enni con almeno un diploma (Eurostat)"});
+  else if(dipLast) out.push({label:"Istruzione "+dipLast[0], value:dipLast[1], min:0, max:100,
+    txt:fmt(dipLast[1],1)+"%", sub:"pop. 6+ con diploma o laurea (censimenti)"});
+  else if(anLast) out.push({label:"Alfabetizzazione "+anLast[0], value:100-anLast[1], min:0, max:100,
+    txt:fmt(100-anLast[1],1)+"%", sub:"100 − analfabetismo al censimento (ISTAT)"});
+  else out.push({nd:true,label:"Istruzione",sub:"nessun dato nell'intervallo"});
+  // 4. delitti: ultimo valore vs massimo dell'intervallo (serie dal 1956)
+  const crLast=lastIn(CRIM), crMax=maxIn(CRIM);
+  if(crLast&&crMax){
+    const atMax=crLast[0]===crMax[0];
+    out.push({label:atMax?("Delitti al massimo nel "+crLast[0]):("Delitti "+crLast[0]+" vs massimo "+crMax[0]),
+      value:crLast[1]/crMax[1]*100, min:0, max:100, txt:fmt(crLast[1]/crMax[1]*100,1)+"%",
+      sub:fmt(crLast[1])+" mila nel "+crLast[0]+(atMax?" · massimo dell'intervallo":" · massimo: "+fmt(crMax[1])+" mila ("+crMax[0]+")")});
+  } else out.push({nd:true,label:"Delitti denunciati",sub:"serie disponibile dal 1956"});
+  // 5. reddito reale (confronto fisso 2006-2022, SHIW)
+  if(RANGE.from<=2006&&RANGE.to>=2022)
+    out.push({label:"Reddito reale vs 2006", value:90, min:0, max:100, txt:"90%",
+      sub:"reddito familiare medio reale 2022 vs 2006: −10% (SHIW, Banca d'Italia)"});
+  else out.push({nd:true,label:"Reddito reale vs 2006",sub:"il confronto SHIW 2006–2022 è fuori dall'intervallo"});
+  return out;
+}
 function renderGauges(){
   const box=document.getElementById("gauges"); if(!box)return;
   box.textContent="";
-  GAUGES.forEach(g=>{
+  computeGauges().forEach(g=>{
     const card=div("gauge",box);
     const W=170,H=104,cx=85,cy=88,r=62,sw=12;
-    const pct=Math.max(0,Math.min(1,(g.value-g.min)/(g.max-g.min)));
+    const pct=g.nd?0:Math.max(0,Math.min(1,(g.value-g.min)/(g.max-g.min)));
     const svg=el("svg",{viewBox:`0 0 ${W} ${H}`,role:"img",
-      "aria-label":g.label+": "+g.txt+" — "+g.sub},card);
+      "aria-label":g.label+": "+(g.nd?"non disponibile":g.txt)+" — "+g.sub},card);
     const arc=`M ${cx-r} ${cy} A ${r} ${r} 0 0 1 ${cx+r} ${cy}`;
     el("path",{d:arc,fill:"none",stroke:css("--gauge-track"),"stroke-width":sw,"stroke-linecap":"round",pathLength:100},svg);
     if(pct>0.001)
       el("path",{d:arc,fill:"none",stroke:css("--s1"),"stroke-width":sw,"stroke-linecap":"round",
         pathLength:100,"stroke-dasharray":`${pct*100} 100`},svg);
-    el("text",{x:cx,y:cy-8,"text-anchor":"middle","font-size":23,"font-weight":600,fill:css("--ink-1")},svg).textContent=g.txt;
-    el("text",{x:cx-r,y:cy+13,"text-anchor":"middle","font-size":9,fill:css("--ink-3"),"font-variant-numeric":"tabular-nums"},svg).textContent=fmt(g.min);
-    el("text",{x:cx+r,y:cy+13,"text-anchor":"middle","font-size":9,fill:css("--ink-3"),"font-variant-numeric":"tabular-nums"},svg).textContent=fmt(g.max);
+    el("text",{x:cx,y:cy-8,"text-anchor":"middle","font-size":g.nd?16:23,"font-weight":600,fill:css(g.nd?"--ink-3":"--ink-1")},svg).textContent=g.nd?"N/D":g.txt;
+    if(!g.nd){
+      el("text",{x:cx-r,y:cy+13,"text-anchor":"middle","font-size":9,fill:css("--ink-3"),"font-variant-numeric":"tabular-nums"},svg).textContent=fmt(g.min);
+      el("text",{x:cx+r,y:cy+13,"text-anchor":"middle","font-size":9,fill:css("--ink-3"),"font-variant-numeric":"tabular-nums"},svg).textContent=fmt(g.max);
+    }
     const l=div("lbl",card); l.textContent=g.label;
     const s=div("sub",card); s.textContent=g.sub;
+  });
+}
+
+/* ============ giudizio (ricalcolato sull'intervallo) ============ */
+function computeGiudizio(inGara){
+  const points={};
+  inGara.forEach(a=>points[a.n]={});
+  for(const c of CAT_GIUDIZIO){
+    const has=inGara.filter(a=>a[c.k]!=null);
+    const sorted=[...has].sort((x,y)=>(y[c.k]-x[c.k])*c.dir);
+    sorted.forEach(a=>{
+      const ties=sorted.filter(b=>b[c.k]===a[c.k]);
+      const first=sorted.findIndex(b=>b[c.k]===a[c.k]);
+      const rank=first+(ties.length-1)/2;
+      points[a.n][c.k]=has.length>1 ? 10*(has.length-1-rank)/(has.length-1) : 10;
+    });
+  }
+  return inGara.map(a=>{
+    let num=0, den=0;
+    for(const c of CAT_GIUDIZIO){
+      if(a[c.k]==null) continue;
+      num+=c.w*points[a.n][c.k]; den+=c.w;
+    }
+    return {...a, score:den?num/den:null, pts:points[a.n]};
+  });
+}
+function buildGiudizio(){
+  const bestBox=document.getElementById("best-cards");
+  const podioBox=document.getElementById("podio");
+  const rankBody=document.getElementById("rank-body");
+  const note=document.getElementById("giudizio-range");
+  if(!bestBox||!podioBox||!rankBody) return;
+  bestBox.textContent=""; podioBox.textContent=""; rankBody.textContent="";
+  const table=rankBody.closest("table");
+  if(table) table.querySelectorAll("th").forEach(h=>{h.classList.remove("sort-asc","sort-desc");h.removeAttribute("aria-sort");});
+  const visibili=AREE_GIUDIZIO.filter(a=>a.p1>=RANGE.from&&a.p0<=RANGE.to);
+  const inGara=visibili.filter(a=>!a.fuori);
+  if(note){
+    const full=RANGE.from===FULL.from&&RANGE.to===FULL.to;
+    note.textContent=full?"":"Giudizio ricalcolato sulle "+inGara.length+
+      " aree politiche che intersecano l'intervallo "+RANGE.from+"–"+RANGE.to+
+      " (le metriche restano riferite all'intera finestra di ciascuna area).";
+  }
+  if(!inGara.length){
+    const tr=document.createElement("tr"); const td=document.createElement("td");
+    td.colSpan=CAT_GIUDIZIO.length+2; td.textContent="Nessuna area politica nell'intervallo selezionato.";
+    tr.appendChild(td); rankBody.appendChild(tr);
+    return;
+  }
+  // migliori per categoria (giudizio universale)
+  for(const c of CAT_GIUDIZIO){
+    const has=inGara.filter(a=>a[c.k]!=null);
+    if(!has.length) continue;
+    const best=has.reduce((m,a)=>((a[c.k]-m[c.k])*c.dir>0?a:m));
+    const tied=has.filter(a=>a[c.k]===best[c.k]);
+    const card=div("tile best-card",bestBox);
+    const l=div("lbl",card); l.textContent="Migliore: "+c.lab.toLowerCase();
+    const v=div("best-name",card); v.textContent=best.breve;
+    const d=div("delta",card);
+    d.textContent=c.f(best[c.k])+" · "+c.desc+
+      (tied.length>1?" · a pari merito con "+(tied.length-1)+" altre aree":"");
+  }
+  // podio ponderato
+  const ranked=computeGiudizio(inGara).sort((x,y)=>(y.score??-1)-(x.score??-1));
+  ranked.filter(a=>a.score!=null).slice(0,3).forEach((a,i)=>{
+    const card=div("tile podio-card"+(i===0?" primo":""),podioBox);
+    const pos=div("pos",card); pos.textContent=(i+1)+"º";
+    const nm=div("best-name",card); nm.textContent=a.n;
+    const sc=div("delta",card); sc.textContent="punteggio ponderato "+fmt(a.score,1)+" / 10";
+  });
+  // classifica completa (con le eventuali aree fuori classifica in coda)
+  const righe=[...ranked, ...visibili.filter(a=>a.fuori).map(a=>({...a,score:null}))];
+  righe.forEach((a,i)=>{
+    const tr=document.createElement("tr"); tr.dataset.orig=String(i);
+    const cells=[a.score!=null?`${i+1}º · ${a.n}`:a.n];
+    for(const c of CAT_GIUDIZIO) cells.push(a[c.k]==null?"N/D":c.f(a[c.k]));
+    cells.push(a.score!=null?fmt(a.score,1):"fuori classifica");
+    cells.forEach((t,j)=>{
+      const td=document.createElement("td");
+      if(j>0)td.className="n";
+      td.textContent=t;
+      if(j>0&&j<=CAT_GIUDIZIO.length){const c=CAT_GIUDIZIO[j-1];
+        if(a[c.k]!=null)td.dataset.sort=String(a[c.k]);}
+      if(j===CAT_GIUDIZIO.length+1&&a.score!=null)td.dataset.sort=String(a.score);
+      tr.appendChild(td);
+    });
+    rankBody.appendChild(tr);
   });
 }
 
@@ -363,7 +428,7 @@ function renderAll(){
       const l=h.parentNode.querySelector(".legend"); if(l)l.remove();}
   });
   renderGauges();
-  const pcData=T1.filter(r=>r.pc!=null).map(r=>[r.a,r.pc]).concat(PC_EXTRA.map(r=>[r.a,r.pc]));
+  const pcData=T1.filter(r=>r.pc!=null).map(r=>[r.a,r.pc]).concat([[2022,36224]]);
   lineChart("c-pil",{x0:1900,x1:2025,ymax:40000,yn:5,ere:true,govNote:true,mr:120,
     aria:"PIL pro capite dell'Italia dal 1900 al 2022 in dollari internazionali 2011",
     unit:" $",series:[{name:"PIL pro capite",color:"--s1",data:pcData}],
@@ -437,6 +502,73 @@ function buildT1(){
   });
 }
 
+/* ============ filtro delle righe di tabella sull'intervallo ============ */
+/* La prima cella di ogni riga contiene l'anno o l'intervallo ("1965–2000",
+   "1922–25", "Fascismo (1922–1943)"): la riga resta visibile se interseca
+   l'intervallo selezionato. La classifica del giudizio è ricostruita a parte. */
+function filterTables(){
+  document.querySelectorAll("main table").forEach(tb=>{
+    if(tb.querySelector("#rank-body"))return;
+    const body=tb.tBodies[0]; if(!body)return;
+    [...body.rows].forEach(r=>{
+      const t=r.cells[0]?r.cells[0].textContent:"";
+      const m=t.match(/(\d{4})(?:\s*[–-]\s*(\d{2,4}))?/);
+      if(!m){r.hidden=false;return;}
+      const y0=parseInt(m[1],10);
+      let y1=y0;
+      if(m[2]) y1=m[2].length===4?parseInt(m[2],10):Math.floor(y0/100)*100+parseInt(m[2],10);
+      if(y1<y0)y1+=100;
+      r.hidden=!(y1>=RANGE.from&&y0<=RANGE.to);
+    });
+  });
+}
+
+/* ============ componente intervallo ============ */
+function applyRange(){
+  renderAll();
+  buildGiudizio();
+  filterTables();
+  const noteEl=document.getElementById("rangeNote");
+  if(noteEl){
+    const full=RANGE.from===FULL.from&&RANGE.to===FULL.to;
+    noteEl.textContent=full?"tutte le statistiche sull'intero periodo":
+      "statistiche limitate al "+RANGE.from+"–"+RANGE.to;
+  }
+}
+function initFilter(){
+  const fromSel=document.getElementById("fromSel"), toSel=document.getElementById("toSel");
+  if(!fromSel||!toSel)return;
+  for(let a=1900;a<=2025;a+=5){
+    const o1=document.createElement("option"); o1.value=a; o1.textContent=a; fromSel.appendChild(o1);
+    const o2=document.createElement("option"); o2.value=a; o2.textContent=a; toSel.appendChild(o2);
+  }
+  fromSel.value=String(RANGE.from); toSel.value=String(RANGE.to);
+  function markPreset(){
+    document.querySelectorAll(".fpresets .ctrl-btn").forEach(b=>{
+      const [f,t]=b.dataset.r.split(",").map(Number);
+      b.classList.toggle("active",f===RANGE.from&&t===RANGE.to);
+    });
+  }
+  function fromSelects(changed){
+    let f=parseInt(fromSel.value,10), t=parseInt(toSel.value,10);
+    if(t-f<5){ if(changed==="from") t=Math.min(2025,f+5); else f=Math.max(1900,t-5); }
+    RANGE.from=f; RANGE.to=t;
+    fromSel.value=String(f); toSel.value=String(t);
+    markPreset(); applyRange();
+  }
+  fromSel.addEventListener("change",()=>fromSelects("from"));
+  toSel.addEventListener("change",()=>fromSelects("to"));
+  document.querySelectorAll(".fpresets .ctrl-btn").forEach(b=>{
+    b.addEventListener("click",()=>{
+      const [f,t]=b.dataset.r.split(",").map(Number);
+      RANGE.from=f; RANGE.to=t;
+      fromSel.value=String(f); toSel.value=String(t);
+      markPreset(); applyRange();
+    });
+  });
+  markPreset();
+}
+
 /* ============ ordinamento tabelle ============ */
 /* Ogni intestazione diventa un bottone: 1º clic ordina crescente,
    2º decrescente, 3º ripristina l'ordine originale. Le celle numeriche
@@ -461,7 +593,7 @@ function makeSortable(table){
   const thead=table.tHead, tbody=table.tBodies[0];
   if(!thead||!tbody) return;
   const ths=[...thead.rows[0].cells];
-  const original=[...tbody.rows];
+  [...tbody.rows].forEach((r,i)=>{if(!r.dataset.orig)r.dataset.orig=String(i);});
   ths.forEach((th,ci)=>{
     if(th.classList.contains("nosort")) return;
     const btn=document.createElement("button");
@@ -471,9 +603,12 @@ function makeSortable(table){
     btn.addEventListener("click",()=>{
       const state=th.classList.contains("sort-asc")?"asc":th.classList.contains("sort-desc")?"desc":"none";
       ths.forEach(h=>{h.classList.remove("sort-asc","sort-desc");h.removeAttribute("aria-sort");});
-      if(state==="desc"){ original.forEach(r=>tbody.appendChild(r)); return; }
-      const dir=state==="asc"?-1:1;
       const rows=[...tbody.rows];
+      if(state==="desc"){
+        rows.sort((a,b)=>parseInt(a.dataset.orig||"0",10)-parseInt(b.dataset.orig||"0",10));
+        rows.forEach(r=>tbody.appendChild(r)); return;
+      }
+      const dir=state==="asc"?-1:1;
       const keys=new Map(rows.map(r=>[r,cellKey(r.cells[ci])]));
       const numeric=rows.filter(r=>keys.get(r).num!=null).length >= rows.length/2;
       rows.sort((a,b)=>{
@@ -552,7 +687,9 @@ function initTheme(){
 
 /* ============ avvio ============ */
 buildT1();
-buildGiudizio();
+initFilter();
 initTheme();               // chiama renderAll() (grafici + gauges)
+buildGiudizio();
 document.querySelectorAll("table").forEach(makeSortable);
 initAccordion();
+filterTables();

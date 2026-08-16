@@ -16,7 +16,8 @@
   <p class="sub">Consultazione interattiva dei dati della ricerca: economia, debito pubblico, istruzione,
   criminalità, spesa pubblica, famiglie e cessioni di asset statali, a finestre quinquennali su fonti
   ufficiali e aperte. Ogni grafico ha la sua tabella completa nella stessa sezione; le tabelle si
-  ordinano cliccando sulle intestazioni.</p>
+  ordinano cliccando sulle intestazioni e l'intervallo di analisi in cima limita grafici, tabelle,
+  indicatori e giudizio al periodo desiderato.</p>
   <p class="meta-line">Versione 2.1 · 16 agosto 2026 · documento completo:
   <a href="efficacia_governi_italiani_1900_2025.md">efficacia_governi_italiani_1900_2025.md</a> ·
   <a href="https://github.com/saulusprime/AilatiditaliA">repository</a></p>
@@ -36,6 +37,19 @@
   <button class="ctrl-btn" id="accBtn" type="button">Apri tutti</button>
 </div></nav>
 
+<div class="filterbar" role="group" aria-label="Intervallo temporale di analisi"><div class="wrap">
+  <span class="flabel">Intervallo di analisi:</span>
+  <label>dal <select id="fromSel"></select></label>
+  <label>al <select id="toSel"></select></label>
+  <span class="fpresets">
+    <button class="ctrl-btn" type="button" data-r="1900,2025">Tutto</button>
+    <button class="ctrl-btn" type="button" data-r="1900,1945">Regno e fascismo</button>
+    <button class="ctrl-btn" type="button" data-r="1945,1995">Prima Repubblica</button>
+    <button class="ctrl-btn" type="button" data-r="1995,2025">Seconda Repubblica</button>
+  </span>
+  <span class="fnote" id="rangeNote">tutte le statistiche sull'intero periodo</span>
+</div></div>
+
 <main>
 
 <!-- ============ SINTESI (sempre visibile) ============ -->
@@ -52,6 +66,7 @@
   del debito, progresso educativo e calo dei delitti, e conta come <b>malus</b> l'aumento della criminalità e
   le cessioni di asset statali. Metodo e avvertenze in fondo alla classifica.</p>
 
+  <p class="fn" id="giudizio-range"></p>
   <div class="best" id="best-cards"></div>
 
   <h4 class="podio-title">Giudizio ponderato — il podio</h4>
