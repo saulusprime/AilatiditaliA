@@ -100,6 +100,17 @@ details.chapter .chapter-body{padding:0 0 30px}
 .gauge .lbl{font-size:.84rem;font-weight:600;margin-top:2px}
 .gauge .sub{font-size:.76rem;color:var(--ink-3);margin-top:3px;line-height:1.4}
 
+/* ---------- giudizio (migliori per categoria + podio) ---------- */
+.best{display:grid;grid-template-columns:repeat(auto-fit,minmax(195px,1fr));gap:12px;margin:16px 0 8px}
+.best-card .best-name{font-size:1.05rem;font-weight:600;margin:3px 0 2px}
+.podio-title{font-size:.98rem;margin:22px 0 8px}
+.podio{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin:0 0 8px}
+.podio-card{display:flex;flex-direction:column;gap:2px}
+.podio-card .pos{font-size:1.5rem;font-weight:700;color:var(--ink-3)}
+.podio-card.primo{border-color:var(--s1)}
+.podio-card.primo .pos{color:var(--s1)}
+.podio-card .best-name{font-size:1.02rem;font-weight:600}
+
 /* ---------- card grafici ---------- */
 .card{background:var(--surface-1);border:1px solid var(--border);border-radius:14px;
   padding:18px 18px 12px;margin:14px 0}

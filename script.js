@@ -64,6 +64,109 @@ const PRIV_GOV = {1992:"Governi: Amato I",1993:"Governi: Amato I / Ciampi",1994:
  1995:"Governo: Dini",1996:"Governi: Dini / Prodi I",1997:"Governo: Prodi I",1998:"Governi: Prodi I / D'Alema I",
  1999:"Governo: D'Alema I",2000:"Governi: D'Alema II / Amato II"};
 
+/* ============ giudizio per area politica ============ */
+/* Metriche per finestra (dalle tabelle della pagina):
+   cres  = variazione media del PIL pro capite per quinquennio (%)
+   deb   = variazione del debito/PIL in punti (negativo = migliora)
+   istr  = progresso educativo in p.p. per quinquennio (fino al 1951:
+           riduzione analfabetismo; 1951-91: analfabetismo + titoli 6+;
+           dal 1992: quota 25-64 con diploma, Eurostat)
+   crim  = variazione % dei delitti denunciati nella finestra (serie dal 1956)
+   asset = malus cessioni di asset statali 0-3 (0 = nessuna cessione rilevante;
+           3 = massime, ~94 mld € 1992-2000) — contate come negative
+   fuori = esclusa dalla classifica (finestra troppo breve)              */
+const AREE_GIUDIZIO = [
+ {n:"Liberali giolittiani (1900–1914)", breve:"Liberali giolittiani", cres:8.3, deb:-26, istr:5.5, crim:null, asset:0},
+ {n:"Guerra e crisi liberale (1915–1922)", breve:"Guerra e crisi liberale", cres:-0.5, deb:75, istr:5.3, crim:null, asset:0},
+ {n:"Fascismo (1922–1943)", breve:"Fascismo", cres:-2.5, deb:-2, istr:2.4, crim:null, asset:2},
+ {n:"Centrismo DC (1945–1962)", breve:"Centrismo DC", cres:52.4, deb:-42, istr:3.0, crim:-3.5, asset:0},
+ {n:"Centrosinistra organico (1962–1976)", breve:"Centrosinistra organico", cres:22.3, deb:29, istr:3.1, crim:131.6, asset:0},
+ {n:"Solidarietà naz. e pentapartito (1976–1992)", breve:"Pentapartito", cres:15.1, deb:49, istr:4.2, crim:224.6, asset:2},
+ {n:"Tecnici e Ulivo (1992–2001)", breve:"Tecnici e Ulivo", cres:12.2, deb:-13, istr:7.9, crim:-11.8, asset:3},
+ {n:"Centrodestra berlusconiano (2001–2011)", breve:"Centrodestra berlusconiano", cres:3.2, deb:10, istr:5.0, crim:18.8, asset:2},
+ {n:"Monti, larghe intese e governi PD (2011–2018)", breve:"Larghe intese e governi PD", cres:-3.3, deb:15, istr:3.8, crim:-12.2, asset:1},
+ {n:"Governi Conte I e II (2018–2021)", breve:"Governi Conte", cres:-3.7, deb:19, istr:2.7, crim:-8.6, asset:0},
+ {n:"Unità nazionale (2021–2022)", breve:"Unità nazionale", cres:11.9, deb:-16, istr:null, crim:7.2, asset:0, fuori:true},
+ {n:"Centrodestra Meloni (2022–2025)", breve:"Centrodestra Meloni", cres:3.7, deb:-1.3, istr:4.4, crim:6.4, asset:1},
+];
+/* categorie: chiave, etichetta, direzione (1 = più alto è meglio), peso, formato */
+const CAT_GIUDIZIO = [
+ {k:"cres", lab:"Crescita", dir:1, w:30, f:v=>(v>0?"+":"")+fmt(v,1)+"%", desc:"PIL pro capite, media per quinquennio"},
+ {k:"deb",  lab:"Debito",   dir:-1, w:25, f:v=>(v>0?"+":"")+fmt(v,1)+" p.p.", desc:"variazione del debito/PIL"},
+ {k:"istr", lab:"Istruzione", dir:1, w:15, f:v=>"+"+fmt(v,1)+" p.p./quinq.", desc:"progresso educativo"},
+ {k:"crim", lab:"Criminalità", dir:-1, w:15, f:v=>(v>0?"+":"")+fmt(v,1)+"%", desc:"variazione dei delitti denunciati"},
+ {k:"asset", lab:"Cessioni di asset", dir:-1, w:15, f:v=>"malus "+fmt(v), desc:"scala delle cessioni (0–3)"},
+];
+/* punteggio 0-10 per ranghi (pari merito condiviso); pesi ridistribuiti sulle categorie disponibili */
+function computeGiudizio(){
+  const inGara=AREE_GIUDIZIO.filter(a=>!a.fuori);
+  const points={};
+  inGara.forEach(a=>points[a.n]={});
+  for(const c of CAT_GIUDIZIO){
+    const has=inGara.filter(a=>a[c.k]!=null);
+    const sorted=[...has].sort((x,y)=>(y[c.k]-x[c.k])*c.dir);
+    // rango medio per i pari merito
+    sorted.forEach((a,i)=>{
+      const ties=sorted.filter(b=>b[c.k]===a[c.k]);
+      const first=sorted.findIndex(b=>b[c.k]===a[c.k]);
+      const rank=first+(ties.length-1)/2;
+      points[a.n][c.k]=has.length>1 ? 10*(has.length-1-rank)/(has.length-1) : 10;
+    });
+  }
+  return AREE_GIUDIZIO.map(a=>{
+    if(a.fuori) return {...a, score:null, pts:{}};
+    let num=0, den=0;
+    for(const c of CAT_GIUDIZIO){
+      if(a[c.k]==null) continue;
+      num+=c.w*points[a.n][c.k]; den+=c.w;
+    }
+    return {...a, score:den?num/den:null, pts:points[a.n]};
+  }).sort((x,y)=>(y.score??-1)-(x.score??-1));
+}
+function buildGiudizio(){
+  const bestBox=document.getElementById("best-cards");
+  const podioBox=document.getElementById("podio");
+  const rankBody=document.getElementById("rank-body");
+  if(!bestBox||!podioBox||!rankBody) return;
+  const ranked=computeGiudizio();
+  // migliori per categoria (giudizio universale)
+  for(const c of CAT_GIUDIZIO){
+    const has=AREE_GIUDIZIO.filter(a=>!a.fuori&&a[c.k]!=null);
+    const best=has.reduce((m,a)=>((a[c.k]-m[c.k])*c.dir>0?a:m));
+    const tied=has.filter(a=>a[c.k]===best[c.k]);
+    const card=div("tile best-card",bestBox);
+    const l=div("lbl",card); l.textContent="Migliore: "+c.lab.toLowerCase();
+    const v=div("best-name",card); v.textContent=best.breve;
+    const d=div("delta",card);
+    d.textContent=c.f(best[c.k])+" · "+c.desc+
+      (tied.length>1?" · a pari merito con "+(tied.length-1)+" altre aree":"");
+  }
+  // podio ponderato
+  ranked.filter(a=>a.score!=null).slice(0,3).forEach((a,i)=>{
+    const card=div("tile podio-card"+(i===0?" primo":""),podioBox);
+    const pos=div("pos",card); pos.textContent=(i+1)+"º";
+    const nm=div("best-name",card); nm.textContent=a.n;
+    const sc=div("delta",card); sc.textContent="punteggio ponderato "+fmt(a.score,1)+" / 10";
+  });
+  // classifica completa
+  ranked.forEach((a,i)=>{
+    const tr=document.createElement("tr");
+    const cells=[a.score!=null?`${i+1}º · ${a.n}`:a.n];
+    for(const c of CAT_GIUDIZIO) cells.push(a[c.k]==null?"N/D":c.f(a[c.k]));
+    cells.push(a.score!=null?fmt(a.score,1):"fuori classifica");
+    cells.forEach((t,j)=>{
+      const td=document.createElement("td");
+      if(j>0)td.className="n";
+      td.textContent=t;
+      if(j>0&&j<=CAT_GIUDIZIO.length){const c=CAT_GIUDIZIO[j-1];
+        if(a[c.k]!=null)td.dataset.sort=String(a[c.k]);}
+      if(j===CAT_GIUDIZIO.length+1&&a.score!=null)td.dataset.sort=String(a.score);
+      tr.appendChild(td);
+    });
+    rankBody.appendChild(tr);
+  });
+}
+
 /* gauges tematici in testata: value su scala [min,max] */
 const GAUGES = [
  {label:"Recupero del picco 2007", value:99.8, min:0, max:100, txt:"99,8%",
@@ -449,6 +552,7 @@ function initTheme(){
 
 /* ============ avvio ============ */
 buildT1();
+buildGiudizio();
 initTheme();               // chiama renderAll() (grafici + gauges)
 document.querySelectorAll("table").forEach(makeSortable);
 initAccordion();
