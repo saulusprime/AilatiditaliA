@@ -5,123 +5,24 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>AilatiditaliA — Efficacia dei governi italiani 1900–2025</title>
 <meta name="description" content="Consultazione interattiva dei dati della ricerca sull'efficacia dei governi italiani 1900–2025: PIL, debito, istruzione, criminalità, spesa pubblica, famiglie, privatizzazioni.">
-<style>
-:root{
-  color-scheme: light;
-  --surface-1:#fcfcfb; --page:#f9f9f7;
-  --ink-1:#0b0b0b; --ink-2:#52514e; --ink-3:#6e6c66;
-  --grid:#e1e0d9; --axis:#c3c2b7; --border:rgba(11,11,11,.10);
-  --s1:#2a78d6; --s2:#eb6834; --s3:#1baf7a; --s4:#eda100;
-  --neg:#e34948; --pos:#2a78d6;
-  --wash-a:rgba(11,11,11,.030); --wash-b:rgba(11,11,11,0);
-  --tile:#ffffff;
-}
-@media (prefers-color-scheme: dark){
-  :root:where(:not([data-theme="light"])){
-    color-scheme: dark;
-    --surface-1:#1a1a19; --page:#0d0d0d;
-    --ink-1:#ffffff; --ink-2:#c3c2b7; --ink-3:#898781;
-    --grid:#2c2c2a; --axis:#383835; --border:rgba(255,255,255,.10);
-    --s1:#3987e5; --s2:#d95926; --s3:#199e70; --s4:#c98500;
-    --neg:#e66767; --pos:#3987e5;
-    --wash-a:rgba(255,255,255,.035); --wash-b:rgba(255,255,255,0);
-    --tile:#1f1f1e;
-  }
-}
-:root[data-theme="dark"]{
-  color-scheme: dark;
-  --surface-1:#1a1a19; --page:#0d0d0d;
-  --ink-1:#ffffff; --ink-2:#c3c2b7; --ink-3:#898781;
-  --grid:#2c2c2a; --axis:#383835; --border:rgba(255,255,255,.10);
-  --s1:#3987e5; --s2:#d95926; --s3:#199e70; --s4:#c98500;
-  --neg:#e66767; --pos:#3987e5;
-  --wash-a:rgba(255,255,255,.035); --wash-b:rgba(255,255,255,0);
-  --tile:#1f1f1e;
-}
-*{box-sizing:border-box}
-html{scroll-behavior:smooth}
-body{margin:0;background:var(--page);color:var(--ink-1);
-  font:16px/1.55 system-ui,-apple-system,"Segoe UI",sans-serif;}
-a{color:var(--s1);text-decoration:none} a:hover{text-decoration:underline}
-.wrap{max-width:1100px;margin:0 auto;padding:0 20px}
-header.site{padding:40px 0 8px}
-header.site h1{font-size:1.9rem;line-height:1.2;margin:0 0 6px}
-header.site .sub{color:var(--ink-2);max-width:70ch;margin:0}
-.meta-line{color:var(--ink-3);font-size:.85rem;margin-top:10px}
-nav.toc{position:sticky;top:0;z-index:50;background:var(--page);
-  border-bottom:1px solid var(--grid);margin-top:18px}
-nav.toc .wrap{display:flex;gap:2px;overflow-x:auto;padding-top:6px;padding-bottom:6px}
-nav.toc a{white-space:nowrap;padding:6px 11px;border-radius:8px;color:var(--ink-2);font-size:.88rem}
-nav.toc a:hover{background:var(--wash-a);text-decoration:none;color:var(--ink-1)}
-section{scroll-margin-top:64px;padding:34px 0 6px}
-section>.wrap>h2{font-size:1.35rem;margin:0 0 4px}
-.lede{color:var(--ink-2);max-width:75ch;margin:4px 0 18px}
-.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px;margin:22px 0 8px}
-.tile{background:var(--tile);border:1px solid var(--border);border-radius:12px;padding:14px 16px}
-.tile .lbl{font-size:.82rem;color:var(--ink-2)}
-.tile .val{font-size:1.7rem;font-weight:600;margin:2px 0 2px}
-.tile .delta{font-size:.82rem;color:var(--ink-3)}
-.tile .delta .up{color:#006300} .tile .delta .down{color:var(--neg)}
-:root[data-theme="dark"] .tile .delta .up{color:#0ca30c}
-@media (prefers-color-scheme: dark){:root:where(:not([data-theme="light"])) .tile .delta .up{color:#0ca30c}}
-.card{background:var(--surface-1);border:1px solid var(--border);border-radius:14px;
-  padding:18px 18px 12px;margin:14px 0}
-.card h3{margin:0 0 2px;font-size:1.02rem}
-.card .sub{color:var(--ink-2);font-size:.86rem;margin:0 0 10px}
-.legend{display:flex;flex-wrap:wrap;gap:14px;margin:2px 0 6px;font-size:.83rem;color:var(--ink-2)}
-.legend .it{display:flex;align-items:center;gap:6px}
-.legend .key{width:16px;height:3px;border-radius:2px;display:inline-block}
-.legend .keyrect{width:11px;height:11px;border-radius:3px;display:inline-block}
-.chart-wrap{position:relative}
-.chart-wrap svg{display:block;width:100%;height:auto}
-.tooltip{position:absolute;pointer-events:none;background:var(--tile);border:1px solid var(--border);
-  border-radius:9px;padding:8px 11px;font-size:.82rem;box-shadow:0 4px 14px rgba(0,0,0,.13);
-  opacity:0;transition:opacity .08s;min-width:130px;z-index:20;max-width:min(290px,calc(100% - 12px))}
-.tooltip .tt-title{font-weight:600;margin-bottom:3px}
-.tooltip .row{display:flex;align-items:center;gap:7px;margin:1px 0;color:var(--ink-2)}
-.tooltip .row .key{width:12px;height:3px;border-radius:2px;flex:none}
-.tooltip .row b{color:var(--ink-1);font-weight:600;margin-left:auto;padding-left:10px}
-.tooltip .note{color:var(--ink-3);margin-top:4px;font-size:.78rem;max-width:250px}
-.caption{font-size:.8rem;color:var(--ink-3);margin:8px 2px 4px;max-width:90ch}
-.table-wrap{overflow-x:auto;border:1px solid var(--border);border-radius:12px;margin:14px 0 4px;background:var(--surface-1)}
-table{border-collapse:collapse;width:100%;font-size:.85rem;min-width:640px}
-caption{caption-side:top;text-align:left;font-weight:600;padding:12px 14px 6px;font-size:.95rem}
-th,td{padding:7px 11px;text-align:left;vertical-align:top;border-top:1px solid var(--grid)}
-thead th{position:sticky;top:0;background:var(--surface-1);color:var(--ink-2);font-weight:600;
-  font-size:.8rem;border-top:none}
-td.n,th.n{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
-tbody tr:hover{background:var(--wash-a)}
-.fn{font-size:.78rem;color:var(--ink-3);margin:8px 2px 16px;max-width:100ch}
-.crit{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:12px;margin:16px 0}
-.crit .card{margin:0}
-.crit .card p{font-size:.86rem;color:var(--ink-2);margin:6px 0 0}
-.badge{display:inline-block;font-size:.72rem;font-weight:600;border-radius:99px;padding:2px 9px;
-  border:1px solid var(--border);color:var(--ink-2);margin-right:6px}
-ul.compact{padding-left:20px;color:var(--ink-2);font-size:.9rem}
-ul.compact li{margin:5px 0}
-.theme-btn{float:right;margin-top:6px;background:var(--tile);color:var(--ink-2);
-  border:1px solid var(--border);border-radius:9px;padding:5px 12px;font:inherit;font-size:.82rem;cursor:pointer}
-.theme-btn:hover{color:var(--ink-1)}
-footer{padding:36px 0 46px;color:var(--ink-3);font-size:.84rem;border-top:1px solid var(--grid);margin-top:40px}
-.src-list{font-size:.85rem}
-.src-list li{margin:3px 0}
-h3.tblh{margin:26px 0 0;font-size:1.05rem}
-</style>
+<link rel="stylesheet" href="style.css">
+<script src="script.js" defer></script>
 </head>
 <body>
 
 <header class="site"><div class="wrap">
-  <button class="theme-btn" id="themeBtn" type="button">Tema: auto</button>
+  <button class="theme-btn ctrl-btn" id="themeBtn" type="button">Tema: auto</button>
   <h1>Efficacia dei governi italiani, 1900–2025</h1>
   <p class="sub">Consultazione interattiva dei dati della ricerca: economia, debito pubblico, istruzione,
   criminalità, spesa pubblica, famiglie e cessioni di asset statali, a finestre quinquennali su fonti
-  ufficiali e aperte. Ogni grafico ha la sua tabella completa nella stessa sezione.</p>
+  ufficiali e aperte. Ogni grafico ha la sua tabella completa nella stessa sezione; le tabelle si
+  ordinano cliccando sulle intestazioni.</p>
   <p class="meta-line">Versione 2.1 · 16 agosto 2026 · documento completo:
   <a href="efficacia_governi_italiani_1900_2025.md">efficacia_governi_italiani_1900_2025.md</a> ·
   <a href="https://github.com/saulusprime/AilatiditaliA">repository</a></p>
 </div></header>
 
-<nav class="toc"><div class="wrap">
+<nav class="toc" aria-label="Sezioni della pagina"><div class="wrap">
   <a href="#sintesi">Sintesi</a>
   <a href="#economia">Economia</a>
   <a href="#debito">Debito</a>
@@ -131,57 +32,46 @@ h3.tblh{margin:26px 0 0;font-size:1.05rem}
   <a href="#asset">Asset e privatizzazioni</a>
   <a href="#aree">Aree politiche</a>
   <a href="#metodo">Metodo e fonti</a>
+  <span class="spacer"></span>
+  <button class="ctrl-btn" id="accBtn" type="button">Apri tutti</button>
 </div></nav>
 
-<!-- ============ SINTESI ============ -->
+<main>
+
+<!-- ============ SINTESI (sempre visibile) ============ -->
 <section id="sintesi"><div class="wrap">
   <h2>Sintesi</h2>
-  <p class="lede">Cinque numeri riassumono 125 anni: la crescita si è fermata nel 2008 (il PIL pro capite ha
+  <p class="lede">Cinque indicatori riassumono 125 anni: la crescita si è fermata nel 2008 (il PIL pro capite ha
   riagganciato il picco 2007 solo nel 2023–25), il debito resta sopra il 130% del PIL, l'istruzione è al massimo
   storico, la criminalità è sui livelli pre-COVID e i redditi reali delle famiglie sono ancora sotto il 2006.</p>
-  <div class="kpis">
-    <div class="tile"><div class="lbl">PIL pro capite 2022 (Maddison, $ 2011)</div>
-      <div class="val">36.224&nbsp;$</div>
-      <div class="delta"><span class="up">+11,9%</span> vs 2020 · −0,2% vs picco 2007</div></div>
-    <div class="tile"><div class="lbl">Debito pubblico / PIL 2025</div>
-      <div class="val">137,1%</div>
-      <div class="delta"><span class="down">+2,4 p.p.</span> vs 2024 (effetto Superbonus)</div></div>
-    <div class="tile"><div class="lbl">25–64enni con almeno un diploma, 2025</div>
-      <div class="val">67,0%</div>
-      <div class="delta"><span class="up">+34,4 p.p.</span> vs 1992 (32,6%)</div></div>
-    <div class="tile"><div class="lbl">Delitti denunciati 2024</div>
-      <div class="val">2,40&nbsp;mln</div>
-      <div class="delta"><span class="down">+2,5%</span> vs 2023 · picco serie pre-2004: 2,50 mln (1990)</div></div>
-    <div class="tile"><div class="lbl">Reddito familiare reale 2022 (SHIW)</div>
-      <div class="val">−10%</div>
-      <div class="delta">rispetto al livello 2006 (Banca d'Italia)</div></div>
-  </div>
+  <div class="gauges" id="gauges"></div>
 </div></section>
 
 <!-- ============ ECONOMIA ============ -->
-<section id="economia"><div class="wrap">
-  <h2>Economia: crescita e governi</h2>
+<details class="chapter" id="economia" open>
+<summary><span class="wrap"><h2>Economia: crescita e governi</h2><span class="chev" aria-hidden="true">❯</span></span></summary>
+<div class="chapter-body"><div class="wrap">
   <p class="lede">Il PIL pro capite (dollari internazionali 2011, Maddison Project 2023) quasi triplica tra 1950
   e 1970, ristagna dal 2008 e recupera il picco 2007 solo dopo il rimbalzo post-COVID. Passa il mouse sui
   grafici: il dettaglio mostra anche il governo in carica.</p>
 
-  <div class="card">
+  <article class="card">
     <h3>PIL pro capite, 1900–2022</h3>
     <p class="sub">Dollari internazionali a prezzi 2011 (PPP). Le fasce di sfondo indicano le stagioni politiche.</p>
     <div class="chart-wrap" id="c-pil"></div>
     <p class="caption">Punti quinquennali 1900–2020 più il 2022 (ultimo dato Maddison). Il collasso bellico
     1940–45 (−44,5% pro capite) riporta il pro capite sotto il livello del 1900 e il PIL totale ai livelli del
     1905; il picco pre-crisi è il 2007 (36.311 $). Fonte: Maddison Project Database 2023 via Our World in Data.</p>
-  </div>
+  </article>
 
-  <div class="card">
+  <article class="card">
     <h3>Variazione del PIL pro capite per quinquennio</h3>
     <p class="sub">Variazione % rispetto a 5 anni prima. Blu = crescita, rosso = contrazione; il 2025 è una stima.</p>
     <div class="chart-wrap" id="c-var"></div>
     <p class="caption">Il +97,2% del 1945–50 è ricostruzione post-bellica; i tre quinquenni negativi consecutivi
     2005–2020 sono un unicum in tempo di pace dall'Unità. 2025: concatenazione Maddison 2020–22 + tassi ISTAT
     2023–25 (≈ +14–15%, stima). Fonte: elaborazione su Maddison 2023 e ISTAT.</p>
-  </div>
+  </article>
 
   <h3 class="tblh">Tabella 1 — Politica, economia e debito (1900–2025)</h3>
   <div class="table-wrap"><table>
@@ -196,15 +86,17 @@ h3.tblh{margin:26px 0 0;font-size:1.05rem}
   dal 1995 Eurostat SEC2010 — serie non omogenee (scarti di 3–6 punti). Picchi fuori griglia: 1920 = 159,7%
   (massimo assoluto); 1943 ≈ 102,5% poi azzerato dall'inflazione (24,2% nel 1947); 1994 = 121,8% (serie dell'epoca);
   2022 = 138,4; 2024 = 134,7; il 2025 risale per l'effetto di cassa dei crediti Superbonus.</p>
-</div></section>
+</div></div>
+</details>
 
 <!-- ============ DEBITO ============ -->
-<section id="debito"><div class="wrap">
-  <h2>Debito pubblico</h2>
+<details class="chapter" id="debito">
+<summary><span class="wrap"><h2>Debito pubblico</h2><span class="chev" aria-hidden="true">❯</span></span></summary>
+<div class="chapter-body"><div class="wrap">
   <p class="lede">È la variabile che separa le stagioni politiche: le uniche riduzioni durature sono venute
   dall'inflazione (1943–47), dalla crescita (1950–65) e dagli avanzi primari con privatizzazioni (1994–2007) —
   mai dalle sole cessioni di asset.</p>
-  <div class="card">
+  <article class="card">
     <h3>Debito delle amministrazioni pubbliche in % del PIL, 1900–2025</h3>
     <p class="sub">Due serie non omogenee: ricostruzione storica Banca d'Italia (1900–1990) e Eurostat SEC2010 (dal 1995).</p>
     <div class="chart-wrap" id="c-debito"></div>
@@ -214,26 +106,28 @@ h3.tblh{margin:26px 0 0;font-size:1.05rem}
     recente è il 2020 (154,4%). Tutti i valori di griglia sono nella colonna Debito/PIL della Tabella 1 (sezione
     Economia); punti intermedi recenti: 2022 = 138,4; 2024 = 134,7. Fonti: Francese-Pace (Banca d'Italia
     QEF 31/2008) via IMF HPDD; Eurostat gov_10dd_edpt1; ISTAT.</p>
-  </div>
-</div></section>
+  </article>
+</div></div>
+</details>
 
 <!-- ============ ISTRUZIONE E CRIMINALITÀ ============ -->
-<section id="istruzione"><div class="wrap">
-  <h2>Istruzione e criminalità</h2>
+<details class="chapter" id="istruzione">
+<summary><span class="wrap"><h2>Istruzione e criminalità</h2><span class="chev" aria-hidden="true">❯</span></span></summary>
+<div class="chapter-body"><div class="wrap">
   <p class="lede">Nel 1901 quasi metà della popolazione era analfabeta; nel 2025 due terzi dei 25–64enni hanno
   almeno un diploma. I delitti denunciati esplodono tra 1970 e 1990 (da 548 mila a 2,5 milioni), oscillano da
   allora tra 1,9 e 2,7 milioni, con il minimo del 2020 dovuto ai lockdown.</p>
 
-  <div class="card">
+  <article class="card">
     <h3>Istruzione: un secolo di scolarizzazione</h3>
     <p class="sub">Tre serie non confrontabili tra loro (popolazioni di riferimento diverse), sulla stessa scala 0–100%.</p>
     <div class="chart-wrap" id="c-istruzione"></div>
     <p class="caption">Analfabetismo e titoli di studio ai censimenti (pop. 6+; dal 2018 pop. 9+ — il punto 2020,
     50,9%, non è pienamente comparabile con la serie 1951–2011); quota 25–64enni con almeno un diploma da Eurostat
     (edat_lfse_03). Fonti: ISTAT "Il lungo cammino dell'istruzione", "Censimento e scuola"; Eurostat.</p>
-  </div>
+  </article>
 
-  <div class="card">
+  <article class="card">
     <h3>Delitti denunciati, 1956–2024</h3>
     <p class="sub">Migliaia. Le linee verticali segnano le rotture di serie (1983: nuovo modello; 2004: sistema SDI).</p>
     <div class="chart-wrap" id="c-crimini"></div>
@@ -241,7 +135,7 @@ h3.tblh{margin:26px 0 0;font-size:1.05rem}
     dal 1955); i valori ante/post 2004 non sono pienamente comparabili. Il picco della serie omogenea pre-2004 è
     il 1990–91 (2.501,6 mila, su cui pesa anche il nuovo codice di procedura penale del 1989); il minimo del 2020
     (1.900,6) è effetto lockdown. Fonti: Eurostat crim_hist (1956–2000); ISTAT DCCV_DELITTIPS e Annuario (2005–2024).</p>
-  </div>
+  </article>
 
   <h3 class="tblh">Tabella 2 — Istruzione e criminalità (1900–2025)</h3>
   <div class="table-wrap"><table>
@@ -282,32 +176,34 @@ h3.tblh{margin:26px 0 0;font-size:1.05rem}
   2004 inclusi Corpo forestale e Polizia penitenziaria). Serie recente: 2019 = 2.301,9; 2021 = 2.104,1;
   2022 = 2.255,8; 2023 = 2.341,6 (+3,8%); 2024 = 2.399,3 (+2,5%). Dal 2018 il censimento permanente rileva la
   popolazione di 9 anni e più.</p>
-</div></section>
+</div></div>
+</details>
 
 <!-- ============ SPESA PUBBLICA ============ -->
-<section id="spesa"><div class="wrap">
-  <h2>Spesa pubblica</h2>
+<details class="chapter" id="spesa">
+<summary><span class="wrap"><h2>Spesa pubblica</h2><span class="chev" aria-hidden="true">❯</span></span></summary>
+<div class="chapter-body"><div class="wrap">
   <p class="lede">La difesa scende quasi ininterrottamente dal dopoguerra (3,8% del PIL nel 1951, 1,2% nel 2015,
   risalita a 1,9% nel 2025); sanità e protezione sociale costruiscono il welfare tra 1970 e 1990 — finanziato in
   deficit; l'istruzione è ferma o in calo dal 2010.</p>
 
-  <div class="card">
+  <article class="card">
     <h3>Difesa, sanità e istruzione in % del PIL</h3>
     <p class="sub">Le interruzioni delle linee segnano cambi di fonte o definizione (dal 1995: COFOG-Eurostat per sanità e istruzione).</p>
     <div class="chart-wrap" id="c-spesa1"></div>
     <p class="caption">Difesa: serie SIPRI continua 1951–2025 (include Carabinieri e pensioni militari: più alta
     di 0,2–0,6 punti della funzione COFOG). Sanità: OCSE 1960–90, poi COFOG GF07 (il sistema pre-1978 è
     mutualistico, non il SSN). Istruzione: UNESCO/World Bank 1970–88, poi COFOG GF09. Fonti: SIPRI, OCSE, Eurostat via OWID.</p>
-  </div>
+  </article>
 
-  <div class="card">
+  <article class="card">
     <h3>Protezione sociale e spesa totale in % del PIL</h3>
     <p class="sub">Welfare in due definizioni non confrontabili tra loro (SOCX-OCSE serie lunga; COFOG GF10 dal 1995) più la spesa pubblica totale.</p>
     <div class="chart-wrap" id="c-spesa2"></div>
     <p class="caption">La spesa sociale sale dal 10,7% (1960) al 26,8% (2010) nella definizione SOCX; la spesa
     totale tocca il 56,8% nel 2020 (picco pandemico) e il 53,6% nel 2023 (crediti Superbonus contabilizzati come
     spesa), per scendere al 50,4% nel 2024. Fonti: OCSE/SOCX-Lindert via OWID; Eurostat gov_10a_exp e gov_10a_main.</p>
-  </div>
+  </article>
 
   <h3 class="tblh">Tabella 3 — Spesa pubblica in % del PIL (1900–2025)</h3>
   <div class="table-wrap"><table>
@@ -347,11 +243,13 @@ h3.tblh{margin:26px 0 0;font-size:1.05rem}
   23 (1941), 22 (1942), 21 (1943); nel 1935–36 le spese di guerra assorbivano il 31,7% della spesa statale
   (Legnani). Il 53,6% del 2023 era gonfiato dai crediti Superbonus. La serie SOCX si ferma al 2010: dal 2015 la
   seconda definizione è ESSPROS (Eurostat), non confrontabile con SOCX.</p>
-</div></section>
+</div></div>
+</details>
 
 <!-- ============ FAMIGLIE ============ -->
-<section id="famiglie"><div class="wrap">
-  <h2>Famiglie: reddito, spesa, debito</h2>
+<details class="chapter" id="famiglie">
+<summary><span class="wrap"><h2>Famiglie: reddito, spesa, debito</h2><span class="chev" aria-hidden="true">❯</span></span></summary>
+<div class="chapter-body"><div class="wrap">
   <p class="lede">Le indagini ufficiali partono solo dagli anni '60–'80: i dati confrontabili coprono il
   2005–2025. Il dato chiave: nel 2022 il reddito familiare medio reale era ancora circa il 10% sotto il livello
   2006 (Banca d'Italia, SHIW).</p>
@@ -385,17 +283,19 @@ h3.tblh{margin:26px 0 0;font-size:1.05rem}
   "Indagine sulle spese"); SHIW 2020 (nuovo disegno campionario: 39.343 € coi nuovi pesi, ≈32.383 € nella serie
   comparabile); la riga 2025 usa l'EU-SILC ISTAT, fonte diversa dalla SHIW. La SHIW 2022 registra +1,4% reale sul
   2020 ma un reddito medio ancora ~10% sotto il 2006 in termini reali.</p>
-</div></section>
+</div></div>
+</details>
 
 <!-- ============ ASSET ============ -->
-<section id="asset"><div class="wrap">
-  <h2>Cessioni di asset statali e rischio «svendita»</h2>
+<details class="chapter" id="asset">
+<summary><span class="wrap"><h2>Cessioni di asset statali e rischio «svendita»</h2><span class="chev" aria-hidden="true">❯</span></span></summary>
+<div class="chapter-body"><div class="wrap">
   <p class="lede">In 125 anni lo Stato ha venduto e ricomprato: la «prima privatizzazione» della storia
   (1922–25), la statalizzazione massima con l'IRI (1933), la grande stagione 1992–2000 (~94 mld €, secondo
   programma al mondo dopo il Giappone), i salvataggi bancari, le ri-nazionalizzazioni recenti e il piano 2024–26.
   Gli importi sono nominali e non sommabili tra epoche diverse.</p>
 
-  <div class="card">
+  <article class="card">
     <h3>La grande stagione: incassi da privatizzazioni, 1992–2000</h3>
     <p class="sub">Milioni di euro correnti per anno, Tesoro + gruppo IRI (Libro bianco del Tesoro, 2001).</p>
     <div class="chart-wrap" id="c-priv"></div>
@@ -404,35 +304,35 @@ h3.tblh{margin:26px 0 0;font-size:1.05rem}
     nel 1997 (Telecom, ENI 3ª tranche) e del 2,21% nel 1999 (ENEL, la più grande OPV europea dell'epoca;
     Autostrade). I proventi del Tesoro erano vincolati per legge (L. 432/1993) al Fondo per l'ammortamento dei
     titoli di Stato: 111,2 mld € di entrate 1994–2005. Fonte: Libro bianco MEF 2001, tab. 8.</p>
-  </div>
+  </article>
 
   <h3 class="tblh">I cinque criteri del rischio «svendita»</h3>
   <div class="crit">
-    <div class="card"><h3>1 · Congruità del prezzo</h3>
+    <article class="card"><h3>1 · Congruità del prezzo</h3>
       <p>Il test più semplice è la rivendita: SEAT ceduta nel 1997 e rivalorizzata ~10 volte nel 2000; la GS dello
       spezzatino SME rivenduta a Carrefour per ~5.000 mld di lire; Alfa Romeo pagata dalla FIAT in 5 rate senza
-      interessi dal 1993; ITA ceduta al 90% per ~650 mln € dopo 1,35 mld € di capitale pubblico appena versato.</p></div>
-    <div class="card"><h3>2 · Destinazione dei proventi</h3>
+      interessi dal 1993; ITA ceduta al 90% per ~650 mln € dopo 1,35 mld € di capitale pubblico appena versato.</p></article>
+    <article class="card"><h3>2 · Destinazione dei proventi</h3>
       <p>Virtuosa quando i proventi riducono il debito (Fondo ammortamento, 1994–2005); non virtuosa quando
       finanziano il bilancio corrente (1922–25), restano agli enti o sono partite contabili infragruppo
-      (cessioni a CDP del 2003–05).</p></div>
-    <div class="card"><h3>3 · Dividendi persi vs interessi risparmiati</h3>
+      (cessioni a CDP del 2003–05).</p></article>
+    <article class="card"><h3>3 · Dividendi persi vs interessi risparmiati</h3>
       <p>Cedere quote ad alto dividendo (ENI, Poste) riduce il debito di frazioni di punto ma rinuncia a flussi
       perpetui: per il piano 2024–26 l'Osservatorio CPI stima che i vantaggi di cassa si annullino in ~20 anni
-      di dividendi persi.</p></div>
-    <div class="card"><h3>4 · Regolazione post-vendita</h3>
+      di dividendi persi.</p></article>
+    <article class="card"><h3>4 · Regolazione post-vendita</h3>
       <p>Una cessione può creare un monopolio privato: i fiammiferi al cartello CIF nel 1923 (divieto legale di
       nuovi entranti), Telecom col nocciolo duro del 6,7% preda della scalata a debito del 1999, Autostrade con
-      una convenzione squilibrata emersa con il Morandi.</p></div>
-    <div class="card"><h3>5 · Socializzazione delle perdite</h3>
+      una convenzione squilibrata emersa con il Morandi.</p></article>
+    <article class="card"><h3>5 · Socializzazione delle perdite</h3>
       <p>Il rischio simmetrico: vendere il buono e tenere il cattivo (Alitalia-CAI 2008: bad company e ~4 mld €
       ai contribuenti) o ricomprare caro ciò che si era venduto (ASPI a 8,2 mld € nel 2022; le autostrade degli
-      anni '20, private nei profitti e pubbliche nel dissesto).</p></div>
+      anni '20, private nei profitti e pubbliche nel dissesto).</p></article>
   </div>
 
   <h3 class="tblh">Tabella 5a — Cessioni (privatizzazioni, concessioni, cartolarizzazioni)</h3>
   <div class="table-wrap"><table>
-    <thead><tr><th>Anni</th><th>Governo</th><th>Operazione</th><th>Incasso nominale</th><th>Nota / rischio svendita</th></tr></thead>
+    <thead><tr><th>Anni</th><th>Governo</th><th>Operazione</th><th class="nosort">Incasso nominale</th><th>Nota / rischio svendita</th></tr></thead>
     <tbody>
       <tr><td>1923</td><td>Mussolini (De Stefani)</td><td>Fine del monopolio dei fiammiferi: vendita al consorzio privato CIF, con divieto per legge di nuove fabbriche</td><td>— (nuova imposta; −65 mln £ di spesa)</td><td>Monopolio privato garantito per legge a un cartello; per Bel (2011) un favore politico più che una liberalizzazione</td></tr>
       <tr><td>1923</td><td>Mussolini (De Stefani)</td><td>Abolizione del monopolio INA sul ramo vita</td><td>—</td><td>Beneficiò le compagnie che avevano fatto lobbying; oligopolio di fatto con l'INA</td></tr>
@@ -473,7 +373,7 @@ h3.tblh{margin:26px 0 0;font-size:1.05rem}
 
   <h3 class="tblh">Tabella 5b — Nazionalizzazioni e salvataggi con denaro pubblico</h3>
   <div class="table-wrap"><table>
-    <thead><tr><th>Anni</th><th>Governo</th><th>Operazione</th><th>Costo per le casse pubbliche</th><th>Nota</th></tr></thead>
+    <thead><tr><th>Anni</th><th>Governo</th><th>Operazione</th><th class="nosort">Costo per le casse pubbliche</th><th>Nota</th></tr></thead>
     <tbody>
       <tr><td>1905–06</td><td>Fortis I / Sonnino I / Giolitti III</td><td>Nazionalizzazione delle ferrovie (nascono le FS); riscatto della Rete Adriatica</td><td>Annualità di 30 mln £/anno per 60 anni + investimenti</td><td>Reti private sotto-investite riportate allo Stato a scadenza delle convenzioni</td></tr>
       <tr><td>1907</td><td>Giolitti III</td><td>Telefoni: reversione allo Stato delle reti delle due maggiori concessionarie</td><td>≈0 (senza indennizzo)</td><td>La gestione statale si rivelò inadeguata (2–3 anni di attesa per un allaccio)</td></tr>
@@ -500,11 +400,13 @@ h3.tblh{margin:26px 0 0;font-size:1.05rem}
     <li><b>Destinazione</b>: 111,2 mld € al Fondo ammortamento titoli di Stato (1994–2005), ma abbattimento del debito di solo ~10% a fronte di un debito cresciuto di un quarto; privatizzazioni «effettive» al 3,9% del PIL contro l'11,9% del Regno Unito.</li>
     <li><b>2024–26</b> (piano Meloni, obiettivo ~20 mld €): incassati ~4,1 mld € (MPS 2,7 + ENI 1,4), più 325 mln € attesi dal closing ITA (Q1 2027) — circa un quinto dell'obiettivo.</li>
   </ul>
-</div></section>
+</div></div>
+</details>
 
 <!-- ============ AREE POLITICHE ============ -->
-<section id="aree"><div class="wrap">
-  <h2>Valutazione sintetica per area politica</h2>
+<details class="chapter" id="aree">
+<summary><span class="wrap"><h2>Valutazione sintetica per area politica</h2><span class="chev" aria-hidden="true">❯</span></span></summary>
+<div class="chapter-body"><div class="wrap">
   <p class="lede">Sintesi per «famiglie» politiche sulle metriche delle tabelle. Correlazione non è causazione:
   ogni area ha governato in condizioni internazionali diverse.</p>
   <div class="table-wrap"><table>
@@ -540,11 +442,13 @@ h3.tblh{margin:26px 0 0;font-size:1.05rem}
     (Banco di Napoli 1997, ITA 2025). Le operazioni meglio riuscite — le OPV di mercato di ENI ed ENEL — sono
     quelle con più concorrenza tra compratori e proventi vincolati alla riduzione del debito.</li>
   </ul>
-</div></section>
+</div></div>
+</details>
 
 <!-- ============ METODO ============ -->
-<section id="metodo"><div class="wrap">
-  <h2>Metodo, limiti e fonti</h2>
+<details class="chapter" id="metodo">
+<summary><span class="wrap"><h2>Metodo, limiti e fonti</h2><span class="chev" aria-hidden="true">❯</span></span></summary>
+<div class="chapter-body"><div class="wrap">
   <ul class="compact">
     <li><span class="badge">Griglia</span> 26 punti di osservazione quinquennali (1900, 1905, … 2025); per ogni
     anno è indicato il governo in carica al 30 giugno. L'attribuzione causale resta debole: gli effetti delle
@@ -572,7 +476,10 @@ h3.tblh{margin:26px 0 0;font-size:1.05rem}
   </ul>
   <p class="fn">L'elenco completo delle fonti, con tutti i collegamenti, è nel §12 del
   <a href="efficacia_governi_italiani_1900_2025.md">documento</a>.</p>
-</div></section>
+</div></div>
+</details>
+
+</main>
 
 <footer><div class="wrap">
   AilatiditaliA · Efficacia dei governi italiani 1900–2025, v2.1 (16 agosto 2026) ·
@@ -580,320 +487,5 @@ h3.tblh{margin:26px 0 0;font-size:1.05rem}
   <a href="https://github.com/saulusprime/AilatiditaliA">github.com/saulusprime/AilatiditaliA</a>
 </div></footer>
 
-<script>
-"use strict";
-/* ============ dati ============ */
-const T1 = [
- {a:1900,g:"Saracco",c:"Liberali (Sinistra storica)",pop:33.7,pil:110,pc:3264,v:null,d:109.8},
- {a:1905,g:"Fortis I",c:"Liberali (Sinistra storica)",pop:35.0,pil:124,pc:3532,v:8.2,d:100.9},
- {a:1910,g:"Luzzatti",c:"Liberali + Radicali",pop:36.6,pil:140,pc:3829,v:8.4,d:87.1},
- {a:1915,g:"Salandra II",c:"Liberali (governo di guerra)",pop:38.0,pil:138,pc:3642,v:-4.9,d:84.3},
- {a:1920,g:"Giolitti V",c:"Liberali, PPI, democratici sociali, radicali",pop:37.4,pil:142,pc:3789,v:4.0,d:159.7},
- {a:1925,g:"Mussolini",c:"PNF",pop:39.2,pil:179,pc:4580,v:20.9,d:103.8},
- {a:1930,g:"Mussolini",c:"PNF",pop:40.8,pil:189,pc:4631,v:1.1,d:106.6},
- {a:1935,g:"Mussolini",c:"PNF",pop:42.4,pil:198,pc:4670,v:0.8,d:80.7},
- {a:1940,g:"Mussolini",c:"PNF (economia di guerra)",pop:44.3,pil:226,pc:5099,v:9.2,d:72.6},
- {a:1945,g:"Parri",c:"PdA; esarchia CLN (DC, PCI, PSIUP, PLI, PdA, PDL)",pop:45.4,pil:129,pc:2831,v:-44.5,d:72.4},
- {a:1950,g:"De Gasperi VI",c:"DC, PSLI, PRI (centrismo)",pop:47.1,pil:263,pc:5582,v:97.2,d:29.5},
- {a:1955,g:"Scelba",c:"DC, PSDI, PLI",pop:48.6,pil:362,pc:7453,v:33.5,d:33.9},
- {a:1960,g:"Tambroni",c:"Monocolore DC (appoggio esterno MSI)",pop:50.2,pil:473,pc:9430,v:26.5,d:31.4},
- {a:1965,g:"Moro II",c:"Centrosinistra organico (DC, PSI, PSDI, PRI)",pop:52.0,pil:630,pc:12111,v:28.4,d:28.4},
- {a:1970,g:"Rumor III",c:"Centrosinistra (DC, PSI, PSU, PRI)",pop:53.7,pil:831,pc:15492,v:27.9,d:37.1},
- {a:1975,g:"Moro IV",c:"DC, PRI (appoggio esterno PSI e PSDI)",pop:55.6,pil:952,pc:17123,v:10.5,d:56.6},
- {a:1980,g:"Cossiga II",c:"DC, PSI, PRI",pop:56.5,pil:1183,pc:20959,v:22.4,d:56.1},
- {a:1985,g:"Craxi I",c:"Pentapartito (PSI, DC, PSDI, PRI, PLI)",pop:56.7,pil:1275,pc:22469,v:7.2,d:80.9},
- {a:1990,g:"Andreotti VI",c:"Pentapartito (DC, PSI, PSDI, PRI, PLI)",pop:56.7,pil:1475,pc:26003,v:15.7,d:95.2},
- {a:1995,g:"Dini",c:"Tecnico",pop:56.9,pil:1630,pc:28666,v:10.2,d:119.1},
- {a:2000,g:"Amato II",c:"Centrosinistra (DS, PPI, Dem., UDEUR, SDI, FdV, RI, PdCI)",pop:57.0,pil:1864,pc:32717,v:14.1,d:108.7},
- {a:2005,g:"Berlusconi III",c:"Casa delle Libertà (FI, AN, UdC, Lega, NPSI, PRI)",pop:58.2,pil:2029,pc:34872,v:6.6,d:106.2},
- {a:2010,g:"Berlusconi IV",c:"Centrodestra (PdL, Lega Nord, MpA)",pop:59.8,pil:2081,pc:34766,v:-0.3,d:118.8},
- {a:2015,g:"Renzi",c:"PD, NCD, UdC, SC, PSI, CD, DemoS",pop:60.3,pil:2026,pc:33621,v:-3.3,d:134.8},
- {a:2020,g:"Conte II",c:"M5S, PD, LeU, IV",pop:59.5,pil:1926,pc:32385,v:-3.7,d:154.4},
- {a:2025,g:"Meloni",c:"Centrodestra (FdI, Lega, FI, NM)",pop:58.9,pil:null,pc:null,v:14.5,d:137.1,stima:true},
-];
-const GOV = {}; T1.forEach(r=>GOV[r.a]=r.g+" — "+r.c);
-const PC_EXTRA = [{a:2022,pc:36224}];           // ultimo dato Maddison
-const DEB_EXTRA = [{a:2022,d:138.4},{a:2024,d:134.7}];
-const ERE = [
- [1900,1922,"Liberali"],[1922,1943,"Fascismo"],[1943,1946,""],
- [1946,1962,"Centrismo"],[1962,1976,"Centrosinistra"],[1976,1992,"Pentapartito"],
- [1992,2001,"Ulivo"],[2001,2011,"Centrodestra"],[2011,2018,"Larghe intese"],
- [2018,2022,"Conte·Draghi"],[2022,2025.5,"Meloni"]
-];
-const ISTR = {
- analf:[[1901,48.5],[1911,37.6],[1921,27.0],[1931,20.9],[1951,12.9],[1961,8.3],[1971,5.2],[1981,3.1],[1991,2.1],[2001,1.5],[2011,1.1],[2021,0.5],[2024,0.5]],
- dip:[[1951,4.3],[1961,5.6],[1971,8.7],[1981,14.3],[1991,22.4],[2001,33.4],[2011,41.4],[null,null],[2020,50.9]],
- eur:[[1992,32.6],[1995,36.3],[2000,45.2],[2005,50.1],[2010,55.1],[2015,59.9],[2020,62.6],[2025,67.0]],
-};
-const CRIM = [[1956,344.9],[1960,332.7],[1965,452.8],[1970,547.8],[1975,770.6],[1980,1139.2],[1985,1364.0],[1990,2501.6],[1995,2267.5],[2000,2205.8],[2005,2579.1],[2010,2621.0],[2015,2687.2],[2019,2301.9],[2020,1900.6],[2021,2104.1],[2022,2255.8],[2023,2341.6],[2024,2399.3]];
-const SPESA1 = {
- difesa:[[1951,3.8],[1955,3.3],[1960,2.7],[1965,2.7],[1970,2.1],[1975,2.0],[1980,1.8],[1985,1.9],[1990,1.9],[1995,1.5],[2000,1.7],[2005,1.6],[2010,1.5],[2015,1.2],[2020,1.7],[2025,1.9]],
- sanita:[[1960,2.7],[1965,3.5],[1970,4.1],[1975,4.8],[1980,5.1],[1985,4.9],[1990,5.7],[null,null],[1995,5.1],[2000,5.8],[2005,6.8],[2010,7.4],[2015,7.0],[2020,7.8],[2024,6.6]],
- istruz:[[1970,3.4],[1975,3.7],[1980,4.4],[1985,4.7],[1988,4.6],[null,null],[1995,4.4],[2000,4.4],[2005,4.5],[2010,4.4],[2015,4.0],[2020,4.3],[2024,4.0]],
-};
-const SPESA2 = {
- socx:[[1960,10.7],[1965,13.2],[1970,13.8],[1975,17.1],[1980,17.3],[1985,20.0],[1990,20.6],[1995,21.0],[2000,22.6],[2005,24.0],[2010,26.8]],
- cofog:[[1995,17.5],[2000,16.7],[2005,17.1],[2010,19.7],[2015,21.2],[2020,25.0],[2024,21.3]],
- tot:[[1995,51.4],[2000,46.4],[2005,47.1],[2010,49.8],[2015,50.2],[2020,56.8],[2023,53.6],[2024,50.4]],
-};
-const PRIV = [[1992,396],[1993,2000],[1994,6739],[1995,7681],[1996,8845],[1997,21130],[1998,12322],[1999,24332],[2000,10853]];
-const PRIV_GOV = {1992:"Governi: Amato I",1993:"Governi: Amato I / Ciampi",1994:"Governi: Ciampi / Berlusconi I",
- 1995:"Governo: Dini",1996:"Governi: Dini / Prodi I",1997:"Governo: Prodi I",1998:"Governi: Prodi I / D'Alema I",
- 1999:"Governo: D'Alema I",2000:"Governi: D'Alema II / Amato II"};
-
-/* ============ util ============ */
-const CS = getComputedStyle(document.documentElement);
-const css = v => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
-const fmt = (n,dec=0) => {
-  if(n==null) return "N/D";
-  try{return n.toLocaleString("it-IT",{minimumFractionDigits:dec,maximumFractionDigits:dec,useGrouping:"always"});}
-  catch(e){return n.toLocaleString("it-IT",{minimumFractionDigits:dec,maximumFractionDigits:dec});}
-};
-const NS = "http://www.w3.org/2000/svg";
-function el(name,attrs,parent){const e=document.createElementNS(NS,name);for(const k in attrs)e.setAttribute(k,attrs[k]);if(parent)parent.appendChild(e);return e;}
-function div(cls,parent){const d=document.createElement("div");if(cls)d.className=cls;if(parent)parent.appendChild(d);return d;}
-function niceTicks(min,max,n=5){
-  const span=max-min; if(!(span>0)) return [min];
-  const step0=span/n, mag=Math.pow(10,Math.floor(Math.log10(step0)));
-  let step=mag; for(const m of [1,2,2.5,5,10]){ if(step0<=m*mag){step=m*mag;break;} }
-  const t=[]; for(let v=Math.ceil(min/step)*step; v<=max+1e-9; v+=step) t.push(Math.round(v*100)/100);
-  return t;
-}
-
-/* ============ line chart ============ */
-function lineChart(id, cfg){
-  const host=document.getElementById(id); if(!host)return;
-  const W=cfg.w||940, H=cfg.h||380, M={t:20,r:cfg.mr||150,b:34,l:46};
-  const legendBox=cfg.series.length>1 ? div("legend") : null;
-  if(legendBox){ host.parentNode.insertBefore(legendBox, host);
-    cfg.series.forEach(s=>{const it=div("it",legendBox);const k=document.createElement("span");
-      k.className="key";k.style.background=css(s.color);it.appendChild(k);
-      it.appendChild(document.createTextNode(s.name));});}
-  const svg=el("svg",{viewBox:`0 0 ${W} ${H}`,role:"img","aria-label":cfg.aria||""},host);
-  const x0=cfg.x0, x1=cfg.x1;
-  const ymin=cfg.ymin??0, ymax=cfg.ymax;
-  const X=a=>M.l+(a-x0)/(x1-x0)*(W-M.l-M.r);
-  const Y=v=>H-M.b-(v-ymin)/(ymax-ymin)*(H-M.t-M.b);
-  // fasce delle ere
-  if(cfg.ere){ let i=0; for(const [a,b,lab] of ERE){
-      if(b<x0||a>x1)continue;
-      const xa=X(Math.max(a,x0)), xb=X(Math.min(b,x1));
-      if(i%2===0) el("rect",{x:xa,y:M.t,width:xb-xa,height:H-M.t-M.b,fill:css("--wash-a")},svg);
-      if(lab && xb-xa>lab.length*5.6+8) el("text",{x:(xa+xb)/2,y:M.t+12,"text-anchor":"middle","font-size":10.5,fill:css("--ink-3")},svg).textContent=lab;
-      i++; } }
-  // griglia + assi
-  for(const t of niceTicks(ymin,ymax,cfg.yn||5)){
-    el("line",{x1:M.l,x2:W-M.r,y1:Y(t),y2:Y(t),stroke:css("--grid"),"stroke-width":1},svg);
-    el("text",{x:M.l-8,y:Y(t)+4,"text-anchor":"end","font-size":11,fill:css("--ink-3"),"font-variant-numeric":"tabular-nums"},svg).textContent=fmt(t,cfg.ydec||0);
-  }
-  el("line",{x1:M.l,x2:W-M.r,y1:Y(ymin),y2:Y(ymin),stroke:css("--axis"),"stroke-width":1},svg);
-  const xstep=cfg.xstep||10;
-  for(let a=Math.ceil(x0/xstep)*xstep;a<=x1;a+=xstep)
-    el("text",{x:X(a),y:H-M.b+18,"text-anchor":"middle","font-size":11,fill:css("--ink-3"),"font-variant-numeric":"tabular-nums"},svg).textContent=a;
-  // linee di rottura
-  (cfg.breaks||[]).forEach(([a,lab])=>{
-    el("line",{x1:X(a),x2:X(a),y1:M.t,y2:H-M.b,stroke:css("--axis"),"stroke-width":1},svg);
-    el("text",{x:X(a)+4,y:M.t+12,"font-size":10,fill:css("--ink-3")},svg).textContent=lab;
-  });
-  // serie
-  cfg.series.forEach(s=>{
-    const col=css(s.color); let d="",pen=false;
-    for(const p of s.data){
-      if(p[0]==null){pen=false;continue;}
-      d+=(pen?" L":"M")+X(p[0])+" "+Y(p[1]); pen=true;
-    }
-    el("path",{d,fill:"none",stroke:col,"stroke-width":2,"stroke-linejoin":"round","stroke-linecap":"round"},svg);
-    for(const p of s.data){ if(p[0]==null)continue;
-      el("circle",{cx:X(p[0]),cy:Y(p[1]),r:3.4,fill:col,stroke:css("--surface-1"),"stroke-width":2},svg);}
-    const last=[...s.data].reverse().find(p=>p[0]!=null);
-    const lbl=el("text",{x:X(last[0])+9,y:Y(last[1])+4,"font-size":11.5,fill:css("--ink-2")},svg);
-    lbl.textContent=(cfg.series.length>1?(s.short||s.name)+" ":"")+fmt(last[1],s.dec??cfg.ydec??0)+(s.unit||cfg.unit||"");
-  });
-  // annotazioni
-  (cfg.notes||[]).forEach(n=>{
-    el("circle",{cx:X(n.a),cy:Y(n.v),r:4.5,fill:"none",stroke:css("--ink-3"),"stroke-width":1.2},svg);
-    el("text",{x:X(n.a)+(n.dx??7),y:Y(n.v)+(n.dy??-8),"font-size":10.5,fill:css("--ink-2")},svg).textContent=n.t;
-  });
-  // interazione: crosshair + tooltip
-  const wrap=host; wrap.style.position="relative";
-  const tip=div("tooltip",wrap);
-  const cross=el("line",{y1:M.t,y2:H-M.b,stroke:css("--axis"),"stroke-width":1,opacity:0},svg);
-  const xs=[...new Set(cfg.series.flatMap(s=>s.data.filter(p=>p[0]!=null).map(p=>p[0])))].sort((a,b)=>a-b);
-  function onmove(ev){
-    const pt=svg.createSVGPoint(); pt.x=ev.clientX; pt.y=ev.clientY;
-    const p=pt.matrixTransform(svg.getScreenCTM().inverse());
-    let best=xs[0]; for(const a of xs) if(Math.abs(X(a)-p.x)<Math.abs(X(best)-p.x)) best=a;
-    cross.setAttribute("x1",X(best)); cross.setAttribute("x2",X(best)); cross.setAttribute("opacity",.8);
-    tip.textContent="";
-    const t1=div("tt-title",tip); t1.textContent=best;
-    cfg.series.forEach(s=>{
-      const hit=s.data.find(q=>q[0]===best); if(!hit)return;
-      const row=div("row",tip); const k=document.createElement("span");
-      k.className="key"; k.style.background=css(s.color); row.appendChild(k);
-      row.appendChild(document.createTextNode(s.name));
-      const b=document.createElement("b"); b.textContent=fmt(hit[1],s.dec??cfg.ydec??0)+(s.unit||cfg.unit||""); row.appendChild(b);
-    });
-    if(cfg.govNote && GOV[best]){const n=div("note",tip); n.textContent=GOV[best];}
-    if(cfg.noteFn){const x=cfg.noteFn(best); if(x){const n=div("note",tip); n.textContent=x;}}
-    const r=wrap.getBoundingClientRect();
-    const left=Math.min(ev.clientX-r.left+14, r.width-tip.offsetWidth-8);
-    tip.style.left=Math.max(0,left)+"px";
-    tip.style.top=Math.max(0,(ev.clientY-r.top-tip.offsetHeight-12))+"px";
-    tip.style.opacity=1;
-  }
-  svg.addEventListener("pointermove",onmove);
-  svg.addEventListener("pointerleave",()=>{tip.style.opacity=0;cross.setAttribute("opacity",0);});
-}
-
-/* ============ bar chart ============ */
-function barChart(id,cfg){
-  const host=document.getElementById(id); if(!host)return;
-  const W=cfg.w||940,H=cfg.h||360,M={t:26,r:20,b:34,l:52};
-  const svg=el("svg",{viewBox:`0 0 ${W} ${H}`,role:"img","aria-label":cfg.aria||""},host);
-  const data=cfg.data;
-  const ymin=cfg.ymin??Math.min(0,...data.map(d=>d.v)), ymax=cfg.ymax??Math.max(...data.map(d=>d.v));
-  const Y=v=>H-M.b-(v-ymin)/(ymax-ymin)*(H-M.t-M.b);
-  const slot=(W-M.l-M.r)/data.length, bw=Math.min(24,slot-4);
-  for(const t of niceTicks(ymin,ymax,cfg.yn||5)){
-    el("line",{x1:M.l,x2:W-M.r,y1:Y(t),y2:Y(t),stroke:css("--grid"),"stroke-width":1},svg);
-    el("text",{x:M.l-8,y:Y(t)+4,"text-anchor":"end","font-size":11,fill:css("--ink-3"),"font-variant-numeric":"tabular-nums"},svg).textContent=fmt(t,0);
-  }
-  el("line",{x1:M.l,x2:W-M.r,y1:Y(0),y2:Y(0),stroke:css("--axis"),"stroke-width":1},svg);
-  const wrap=host; wrap.style.position="relative";
-  const tip=div("tooltip",wrap);
-  data.forEach((d,i)=>{
-    const cx=M.l+slot*i+slot/2, up=d.v>=0;
-    const y0=Y(0), y1=Y(d.v), hpx=Math.max(1.5,Math.abs(y0-y1)), r=Math.min(4,hpx);
-    const col=css(d.neg? "--neg" : (cfg.color||"--s1"));
-    const x=cx-bw/2;
-    const path= up
-      ? `M${x} ${y0} L${x} ${y1+r} Q${x} ${y1} ${x+r} ${y1} L${x+bw-r} ${y1} Q${x+bw} ${y1} ${x+bw} ${y1+r} L${x+bw} ${y0} Z`
-      : `M${x} ${y0} L${x} ${y1-r} Q${x} ${y1} ${x+r} ${y1} L${x+bw-r} ${y1} Q${x+bw} ${y1} ${x+bw} ${y1-r} L${x+bw} ${y0} Z`;
-    const bar=el("path",{d:path,fill:col,opacity:d.faded?0.45:1},svg);
-    if(d.lab){const anch=cx>W-110?"end":(cx<M.l+60?"start":"middle");
-      el("text",{x:anch==="end"?cx+bw/2:(anch==="start"?cx-bw/2:cx),y:up?y1-7:y1+15,"text-anchor":anch,"font-size":10.5,fill:css("--ink-2")},svg).textContent=d.lab;}
-    if(cfg.everyLabel||data.length<=12||i%Math.ceil(data.length/12)===0)
-      el("text",{x:cx,y:H-M.b+17,"text-anchor":"middle","font-size":10.5,fill:css("--ink-3"),"font-variant-numeric":"tabular-nums"},svg).textContent=d.a;
-    const hit=el("rect",{x:M.l+slot*i,y:M.t,width:slot,height:H-M.t-M.b,fill:"transparent"},svg);
-    function show(ev){
-      bar.setAttribute("opacity",d.faded?0.65:0.82);
-      tip.textContent="";
-      const t1=div("tt-title",tip); t1.textContent=d.a;
-      const row=div("row",tip); row.appendChild(document.createTextNode(cfg.name||""));
-      const b=document.createElement("b"); b.textContent=(d.v>0&&cfg.signed?"+":"")+fmt(d.v,cfg.dec||0)+(cfg.unit||""); row.appendChild(b);
-      if(d.note){const n=div("note",tip); n.textContent=d.note;}
-      else if(cfg.govNote&&GOV[d.a]){const n=div("note",tip); n.textContent=GOV[d.a];}
-      const rct=wrap.getBoundingClientRect();
-      const left=Math.min(ev.clientX-rct.left+14, rct.width-tip.offsetWidth-8);
-      tip.style.left=Math.max(0,left)+"px";
-      tip.style.top=Math.max(0,(ev.clientY-rct.top-tip.offsetHeight-12))+"px";
-      tip.style.opacity=1;
-    }
-    hit.addEventListener("pointermove",show);
-    hit.addEventListener("pointerleave",()=>{bar.setAttribute("opacity",d.faded?0.45:1);tip.style.opacity=0;});
-  });
-}
-
-/* ============ render ============ */
-function renderAll(){
-  ["c-pil","c-var","c-debito","c-istruzione","c-crimini","c-spesa1","c-spesa2","c-priv"].forEach(id=>{
-    const h=document.getElementById(id); if(h){h.textContent="";
-      const l=h.parentNode.querySelector(".legend"); if(l)l.remove();}
-  });
-  const pcData=T1.filter(r=>r.pc!=null).map(r=>[r.a,r.pc]).concat(PC_EXTRA.map(r=>[r.a,r.pc]));
-  lineChart("c-pil",{x0:1900,x1:2025,ymax:40000,yn:5,ere:true,govNote:true,mr:120,
-    aria:"PIL pro capite dell'Italia dal 1900 al 2022 in dollari internazionali 2011",
-    unit:" $",series:[{name:"PIL pro capite",color:"--s1",data:pcData}],
-    notes:[{a:2007,v:36311,t:"picco 2007: 36.311 $",dx:-215,dy:16},{a:1945,v:2831,t:"1945: −44,5% in 5 anni",dx:8,dy:10}],
-    noteFn:a=>a===2022?"Ultimo dato Maddison (+11,9% vs 2020; −0,2% vs picco 2007)":null});
-
-  barChart("c-var",{name:"Variazione quinquennale",unit:"%",signed:true,dec:1,govNote:true,everyLabel:false,
-    aria:"Variazione percentuale del PIL pro capite per quinquennio",
-    data:T1.filter(r=>r.v!=null).map(r=>({a:r.a,v:r.v,neg:r.v<0,faded:!!r.stima,
-      lab:r.stima?"≈ +14–15% stima":(Math.abs(r.v)>=30?((r.v>0?"+":"")+fmt(r.v,1)+"%"):null),
-      note:r.stima?"Stima ≈ +14–15%: concatenazione Maddison 2020–22 + ISTAT 2023–25":null}))});
-
-  const debData=T1.map(r=>[r.a,r.d]);
-  const debSplit1=debData.filter(p=>p[0]<=1990), debSplit2=debData.filter(p=>p[0]>=1995)
-    .concat(DEB_EXTRA.map(r=>[r.a,r.d])).sort((a,b)=>a[0]-b[0]);
-  lineChart("c-debito",{x0:1900,x1:2025,ymax:170,yn:5,ere:true,govNote:true,mr:150,unit:"%",
-    aria:"Debito pubblico italiano in percentuale del PIL dal 1900 al 2025",
-    series:[{name:"serie storica (1900–1990)",short:"serie storica",color:"--s1",data:debSplit1,dec:1},
-            {name:"Eurostat SEC2010 (dal 1995)",short:"Eurostat",color:"--s2",data:debSplit2,dec:1}],
-    notes:[{a:1920,v:159.7,t:"max storico: 159,7%",dx:10,dy:4},
-           {a:1950,v:29.5,t:"1947: minimo 24,2% (iperinflazione)",dx:6,dy:16},
-           {a:2020,v:154.4,t:"2020: 154,4%",dx:8,dy:2}]});
-
-  lineChart("c-istruzione",{x0:1900,x1:2025,ymax:100,yn:5,mr:160,unit:"%",xstep:20,
-    aria:"Analfabetismo e titoli di studio in Italia dal 1901 al 2025",
-    series:[{name:"Analfabetismo (censimenti)",short:"Analfabetismo",color:"--s1",data:ISTR.analf,dec:1},
-            {name:"Diploma o laurea, pop. 6+",short:"Diploma+, 6+",color:"--s3",data:ISTR.dip,dec:1},
-            {name:"Almeno diploma, 25–64 (Eurostat)",short:"25–64 diploma",color:"--s2",data:ISTR.eur,dec:1}],
-    noteFn:a=>a===2020?"Diploma/laurea 2020: popolazione 9+, non comparabile con la serie 1951–2011":null});
-
-  lineChart("c-crimini",{x0:1955,x1:2025,ymax:2800,yn:5,mr:96,xstep:10,
-    aria:"Delitti denunciati in Italia dal 1956 al 2024, in migliaia",
-    series:[{name:"Delitti denunciati",color:"--s1",data:CRIM,unit:" mila"}],
-    breaks:[[1983,"rottura 1983"],[2004,"rottura 2004 (SDI)"]],
-    notes:[{a:1990,v:2501.6,t:"picco serie pre-2004",dx:-60,dy:-12},
-           {a:2020,v:1900.6,t:"2020: lockdown",dx:-110,dy:14}],
-    noteFn:a=>a===1960?"Base Eurostat; per il 1959–61 la serie ISTAT è più alta di ~48 mila (1960: 381,0)":null});
-
-  lineChart("c-spesa1",{x0:1950,x1:2025,ymax:8,yn:4,mr:130,unit:"%",xstep:10,
-    aria:"Spesa per difesa, sanità e istruzione in percentuale del PIL dal 1951 al 2025",
-    series:[{name:"Difesa (SIPRI)",color:"--s1",data:SPESA1.difesa,dec:1},
-            {name:"Sanità",color:"--s2",data:SPESA1.sanita,dec:1},
-            {name:"Istruzione",color:"--s3",data:SPESA1.istruz,dec:1}],
-    noteFn:a=>(a===1995)?"Dal 1995: definizione COFOG (Eurostat) per sanità e istruzione":null});
-
-  lineChart("c-spesa2",{x0:1955,x1:2025,ymax:60,yn:6,mr:178,unit:"%",xstep:10,
-    aria:"Protezione sociale e spesa pubblica totale in percentuale del PIL",
-    series:[{name:"Prot. sociale (SOCX)",color:"--s1",data:SPESA2.socx,dec:1},
-            {name:"Prot. sociale (COFOG)",color:"--s2",data:SPESA2.cofog,dec:1},
-            {name:"Spesa totale",color:"--s3",data:SPESA2.tot,dec:1}],
-    noteFn:a=>a===2023?"53,6%: gonfiato dai crediti Superbonus contabilizzati come spesa":null});
-
-  barChart("c-priv",{name:"Incassi da privatizzazioni",unit:" mln €",dec:0,everyLabel:true,
-    aria:"Incassi annui da privatizzazioni 1992-2000 in milioni di euro",
-    data:PRIV.map(([a,v])=>({a,v,lab:(a===1997||a===1999)?fmt(v)+" ("+(a===1997?"2,05":"2,21")+"% PIL)":null,
-      note:PRIV_GOV[a]||null}))});
-}
-
-/* T1 tabella */
-(function(){
-  const tb=document.getElementById("t1-body");
-  T1.forEach(r=>{
-    const tr=document.createElement("tr");
-    const cells=[r.a, r.g, r.c, fmt(r.pop,1), r.pil==null?"N/D":fmt(r.pil), r.pc==null?"N/D":fmt(r.pc),
-      r.v==null?"—":(r.stima?"≈ +14–15% (stima)":((r.v>0?"+":"")+fmt(r.v,1)+"%")), fmt(r.d,1)];
-    cells.forEach((c,i)=>{const td=document.createElement("td");
-      if(i===0||i>=3)td.className="n"; td.textContent=c; tr.appendChild(td);});
-    tb.appendChild(tr);
-  });
-})();
-
-/* tema */
-(function(){
-  const btn=document.getElementById("themeBtn");
-  const seq=["auto","light","dark"];
-  const store={
-    get(k){try{return localStorage.getItem(k);}catch(e){return null;}},
-    set(k,v){try{localStorage.setItem(k,v);}catch(e){}}
-  };
-  let cur=store.get("theme"); if(!seq.includes(cur)) cur="auto";
-  function apply(){
-    if(cur==="auto")document.documentElement.removeAttribute("data-theme");
-    else document.documentElement.setAttribute("data-theme",cur);
-    btn.textContent="Tema: "+(cur==="auto"?"auto":cur==="light"?"chiaro":"scuro");
-    renderAll();
-  }
-  btn.addEventListener("click",()=>{cur=seq[(seq.indexOf(cur)+1)%3];store.set("theme",cur);apply();});
-  apply();
-  const mq=window.matchMedia("(prefers-color-scheme: dark)");
-  const onMq=()=>{if(cur==="auto")apply();};
-  if(typeof mq.addEventListener==="function") mq.addEventListener("change",onMq);
-  else if(mq.addListener) mq.addListener(onMq);
-})();
-</script>
 </body>
 </html>

@@ -1,0 +1,169 @@
+/* ============================================================
+   AilatiditaliA — Efficacia dei governi italiani 1900–2025
+   Foglio di stile (CSS3). Palette validata per accessibilità
+   (CVD) in tema chiaro e scuro; i grafici leggono i token
+   via getComputedStyle, quindi ogni colore vive solo qui.
+   ============================================================ */
+
+:root{
+  color-scheme: light;
+  --surface-1:#fcfcfb; --page:#f9f9f7;
+  --ink-1:#0b0b0b; --ink-2:#52514e; --ink-3:#6e6c66;
+  --grid:#e1e0d9; --axis:#c3c2b7; --border:rgba(11,11,11,.10);
+  --s1:#2a78d6; --s2:#eb6834; --s3:#1baf7a; --s4:#eda100;
+  --neg:#e34948; --pos:#2a78d6;
+  --wash-a:rgba(11,11,11,.030); --wash-b:rgba(11,11,11,0);
+  --tile:#ffffff;
+  --gauge-track:#cde2fb;
+  --up:#006300;
+}
+@media (prefers-color-scheme: dark){
+  :root:where(:not([data-theme="light"])){
+    color-scheme: dark;
+    --surface-1:#1a1a19; --page:#0d0d0d;
+    --ink-1:#ffffff; --ink-2:#c3c2b7; --ink-3:#898781;
+    --grid:#2c2c2a; --axis:#383835; --border:rgba(255,255,255,.10);
+    --s1:#3987e5; --s2:#d95926; --s3:#199e70; --s4:#c98500;
+    --neg:#e66767; --pos:#3987e5;
+    --wash-a:rgba(255,255,255,.035); --wash-b:rgba(255,255,255,0);
+    --tile:#1f1f1e;
+    --gauge-track:#0d366b;
+    --up:#0ca30c;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme: dark;
+  --surface-1:#1a1a19; --page:#0d0d0d;
+  --ink-1:#ffffff; --ink-2:#c3c2b7; --ink-3:#898781;
+  --grid:#2c2c2a; --axis:#383835; --border:rgba(255,255,255,.10);
+  --s1:#3987e5; --s2:#d95926; --s3:#199e70; --s4:#c98500;
+  --neg:#e66767; --pos:#3987e5;
+  --wash-a:rgba(255,255,255,.035); --wash-b:rgba(255,255,255,0);
+  --tile:#1f1f1e;
+  --gauge-track:#0d366b;
+  --up:#0ca30c;
+}
+
+/* ---------- base ---------- */
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--page);color:var(--ink-1);
+  font:16px/1.55 system-ui,-apple-system,"Segoe UI",sans-serif;}
+a{color:var(--s1);text-decoration:none}
+a:hover{text-decoration:underline}
+.wrap{max-width:1100px;margin:0 auto;padding:0 20px}
+
+/* ---------- testata ---------- */
+header.site{padding:40px 0 8px}
+header.site h1{font-size:1.9rem;line-height:1.2;margin:0 0 6px}
+header.site .sub{color:var(--ink-2);max-width:70ch;margin:0}
+.meta-line{color:var(--ink-3);font-size:.85rem;margin-top:10px}
+
+nav.toc{position:sticky;top:0;z-index:50;background:var(--page);
+  border-bottom:1px solid var(--grid);margin-top:18px}
+nav.toc .wrap{display:flex;gap:2px;align-items:center;overflow-x:auto;
+  padding-top:6px;padding-bottom:6px}
+nav.toc a{white-space:nowrap;padding:6px 11px;border-radius:8px;
+  color:var(--ink-2);font-size:.88rem}
+nav.toc a:hover{background:var(--wash-a);text-decoration:none;color:var(--ink-1)}
+nav.toc .spacer{flex:1}
+
+/* ---------- sezioni e accordion ---------- */
+section{scroll-margin-top:64px;padding:34px 0 6px}
+section>.wrap>h2{font-size:1.35rem;margin:0 0 4px}
+details.chapter{scroll-margin-top:64px;border-bottom:1px solid var(--grid)}
+details.chapter>summary{list-style:none;cursor:pointer;padding:20px 0;
+  display:block;position:relative}
+details.chapter>summary::-webkit-details-marker{display:none}
+details.chapter>summary:hover h2{color:var(--s1)}
+details.chapter>summary:focus-visible{outline:2px solid var(--s1);outline-offset:2px;border-radius:6px}
+details.chapter>summary .wrap{display:flex;align-items:baseline;gap:12px}
+details.chapter h2{font-size:1.35rem;margin:0;flex:1}
+details.chapter .chev{color:var(--ink-3);font-size:.95rem;
+  transition:transform .15s ease;transform:rotate(0deg);flex:none;align-self:center}
+details.chapter[open] .chev{transform:rotate(90deg)}
+details.chapter .chapter-body{padding:0 0 30px}
+.lede{color:var(--ink-2);max-width:75ch;margin:4px 0 18px}
+
+/* ---------- gauges e tiles ---------- */
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px;margin:22px 0 8px}
+.tile{background:var(--tile);border:1px solid var(--border);border-radius:12px;padding:14px 16px}
+.tile .lbl{font-size:.82rem;color:var(--ink-2)}
+.tile .val{font-size:1.7rem;font-weight:600;margin:2px 0 2px}
+.tile .delta{font-size:.82rem;color:var(--ink-3)}
+.tile .delta .up{color:var(--up)}
+.tile .delta .down{color:var(--neg)}
+.gauges{display:grid;grid-template-columns:repeat(auto-fit,minmax(185px,1fr));gap:12px;margin:22px 0 8px}
+.gauge{background:var(--tile);border:1px solid var(--border);border-radius:12px;
+  padding:14px 14px 12px;text-align:center}
+.gauge svg{display:block;width:100%;max-width:170px;height:auto;margin:0 auto}
+.gauge .lbl{font-size:.84rem;font-weight:600;margin-top:2px}
+.gauge .sub{font-size:.76rem;color:var(--ink-3);margin-top:3px;line-height:1.4}
+
+/* ---------- card grafici ---------- */
+.card{background:var(--surface-1);border:1px solid var(--border);border-radius:14px;
+  padding:18px 18px 12px;margin:14px 0}
+.card h3{margin:0 0 2px;font-size:1.02rem}
+.card .sub{color:var(--ink-2);font-size:.86rem;margin:0 0 10px}
+.legend{display:flex;flex-wrap:wrap;gap:14px;margin:2px 0 6px;font-size:.83rem;color:var(--ink-2)}
+.legend .it{display:flex;align-items:center;gap:6px}
+.legend .key{width:16px;height:3px;border-radius:2px;display:inline-block}
+.chart-wrap{position:relative}
+.chart-wrap svg{display:block;width:100%;height:auto}
+.caption{font-size:.8rem;color:var(--ink-3);margin:8px 2px 4px;max-width:90ch}
+
+/* ---------- tooltip ---------- */
+.tooltip{position:absolute;pointer-events:none;background:var(--tile);
+  border:1px solid var(--border);border-radius:9px;padding:8px 11px;font-size:.82rem;
+  box-shadow:0 4px 14px rgba(0,0,0,.13);opacity:0;transition:opacity .08s;
+  min-width:130px;z-index:20;max-width:min(290px,calc(100% - 12px))}
+.tooltip .tt-title{font-weight:600;margin-bottom:3px}
+.tooltip .row{display:flex;align-items:center;gap:7px;margin:1px 0;color:var(--ink-2)}
+.tooltip .row .key{width:12px;height:3px;border-radius:2px;flex:none}
+.tooltip .row b{color:var(--ink-1);font-weight:600;margin-left:auto;padding-left:10px}
+.tooltip .note{color:var(--ink-3);margin-top:4px;font-size:.78rem;max-width:250px}
+
+/* ---------- tabelle ---------- */
+.table-wrap{overflow-x:auto;border:1px solid var(--border);border-radius:12px;
+  margin:14px 0 4px;background:var(--surface-1)}
+table{border-collapse:collapse;width:100%;font-size:.85rem;min-width:640px}
+caption{caption-side:top;text-align:left;font-weight:600;padding:12px 14px 6px;font-size:.95rem}
+th,td{padding:7px 11px;text-align:left;vertical-align:top;border-top:1px solid var(--grid)}
+thead th{background:var(--surface-1);color:var(--ink-2);
+  font-weight:600;font-size:.8rem;border-top:none}
+td.n,th.n{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+tbody tr:hover{background:var(--wash-a)}
+.fn{font-size:.78rem;color:var(--ink-3);margin:8px 2px 16px;max-width:100ch}
+
+/* ordinamento: il th diventa un bottone */
+th .sortbtn{background:none;border:none;padding:0;margin:0;font:inherit;
+  color:inherit;cursor:pointer;display:inline-flex;align-items:center;gap:5px;
+  text-align:inherit}
+th.n .sortbtn{justify-content:flex-end;width:100%}
+th .sortbtn::after{content:"↕";opacity:.35;font-size:.85em;flex:none}
+th.sort-asc .sortbtn::after{content:"↑";opacity:1}
+th.sort-desc .sortbtn::after{content:"↓";opacity:1}
+th .sortbtn:hover{color:var(--ink-1)}
+th .sortbtn:focus-visible{outline:2px solid var(--s1);outline-offset:2px;border-radius:4px}
+
+/* ---------- schede criteri, elenchi, badge ---------- */
+.crit{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:12px;margin:16px 0}
+.crit .card{margin:0}
+.crit .card p{font-size:.86rem;color:var(--ink-2);margin:6px 0 0}
+.badge{display:inline-block;font-size:.72rem;font-weight:600;border-radius:99px;
+  padding:2px 9px;border:1px solid var(--border);color:var(--ink-2);margin-right:6px}
+ul.compact{padding-left:20px;color:var(--ink-2);font-size:.9rem}
+ul.compact li{margin:5px 0}
+.src-list{font-size:.85rem}
+.src-list li{margin:3px 0}
+h3.tblh{margin:26px 0 0;font-size:1.05rem}
+
+/* ---------- controlli ---------- */
+.ctrl-btn{background:var(--tile);color:var(--ink-2);border:1px solid var(--border);
+  border-radius:9px;padding:5px 12px;font:inherit;font-size:.82rem;cursor:pointer;white-space:nowrap}
+.ctrl-btn:hover{color:var(--ink-1)}
+.theme-btn{float:right;margin-top:6px}
+
+/* ---------- footer ---------- */
+footer{padding:36px 0 46px;color:var(--ink-3);font-size:.84rem;
+  border-top:1px solid var(--grid);margin-top:40px}
