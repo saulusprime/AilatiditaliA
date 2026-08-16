@@ -637,13 +637,15 @@ fetch("data.json",{cache:"no-cache"})
   .then(r=>{ if(!r.ok) throw new Error("HTTP "+r.status); return r.json(); })
   .then(boot)
   .catch(e=>{
+    /* fetch bloccato (tipicamente file://): si usa la copia in data.js */
+    if(window.__DATA__){ boot(window.__DATA__); return; }
     const main=document.querySelector("main");
     if(main){
       const b=document.createElement("p");
       b.className="load-error";
-      b.textContent="Impossibile caricare data.json ("+e.message+"): grafici, indicatori e giudizio "+
-        "non sono disponibili. Se la pagina è aperta da file://, avvia un piccolo server locale "+
-        "(es. \"python3 -m http.server\" nella cartella del progetto) oppure usa la versione online.";
+      b.textContent="Impossibile caricare i dati ("+e.message+", e data.js non è presente accanto "+
+        "alla pagina): grafici, indicatori e giudizio non sono disponibili. Scarica l'intera cartella "+
+        "del progetto (index.html, style.css, script.js, data.js, data.json) oppure usa la versione online.";
       main.insertBefore(b,main.firstChild);
     }
     initTheme();
