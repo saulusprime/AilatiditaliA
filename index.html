@@ -11,8 +11,49 @@
 </head>
 <body>
 
-<header class="site"><div class="wrap">
-  <button class="theme-btn ctrl-btn" id="themeBtn" type="button">Tema: auto</button>
+<nav class="topbar" aria-label="Barra superiore"><div class="wrap">
+  <a class="brand" href="#top" title="Torna all'inizio">
+    <img src="logo.png" alt="Ai lati d'Italia" width="845" height="404">
+  </a>
+  <div class="menu menu-period">
+    <button class="ctrl-btn menu-btn" id="periodBtn" type="button" aria-expanded="false"
+      aria-controls="periodPanel">Periodo: <b id="periodLbl">1900–2025</b> <span class="caret" aria-hidden="true">❯</span></button>
+    <div class="menu-panel period-panel" id="periodPanel" role="group" aria-label="Intervallo temporale di analisi">
+      <span class="flabel">Intervallo di analisi</span>
+      <div class="frow">
+        <label>dal <select id="fromSel"></select></label>
+        <label>al <select id="toSel"></select></label>
+      </div>
+      <div class="fpresets">
+        <button class="ctrl-btn" type="button" data-r="1900,2025">Tutto · 1900–2025</button>
+        <button class="ctrl-btn" type="button" data-r="1900,1945">Regno e fascismo · 1900–1945</button>
+        <button class="ctrl-btn" type="button" data-r="1945,1995">Prima Repubblica · 1945–1995</button>
+        <button class="ctrl-btn" type="button" data-r="1995,2025">Seconda Repubblica · 1995–2025</button>
+      </div>
+      <p class="fnote" id="rangeNote">tutte le statistiche sull'intero periodo</p>
+    </div>
+  </div>
+  <div class="menu menu-sections">
+    <button class="ctrl-btn menu-btn" id="sectionsBtn" type="button" aria-expanded="false"
+      aria-controls="sectionsPanel">Sezioni <span class="caret" aria-hidden="true">❯</span></button>
+    <div class="menu-panel menu-list" id="sectionsPanel" aria-label="Sezioni della pagina">
+      <a href="#sintesi">Sintesi</a>
+      <a href="#economia">Economia</a>
+      <a href="#debito">Debito pubblico</a>
+      <a href="#istruzione">Istruzione e criminalità</a>
+      <a href="#spesa">Spesa pubblica</a>
+      <a href="#famiglie">Famiglie</a>
+      <a href="#asset">Asset e privatizzazioni</a>
+      <a href="#aree">Aree politiche</a>
+      <a href="#metodo">Metodo e fonti</a>
+      <hr class="menu-sep">
+      <button class="ctrl-btn" id="accBtn" type="button">Apri tutti</button>
+    </div>
+  </div>
+  <button class="ctrl-btn" id="themeBtn" type="button">Tema: auto</button>
+</div></nav>
+
+<header class="site" id="top"><div class="wrap">
   <h1>Efficacia dei governi italiani, 1900–2025</h1>
   <p class="sub">Consultazione interattiva dei dati della ricerca: economia, debito pubblico, istruzione,
   criminalità, spesa pubblica, famiglie e cessioni di asset statali, a finestre quinquennali su fonti
@@ -24,33 +65,6 @@
   dati: <a href="data.json">data.json</a> ·
   <a href="https://github.com/saulusprime/AilatiditaliA">repository</a></p>
 </div></header>
-
-<nav class="toc" aria-label="Sezioni della pagina"><div class="wrap">
-  <a href="#sintesi">Sintesi</a>
-  <a href="#economia">Economia</a>
-  <a href="#debito">Debito</a>
-  <a href="#istruzione">Istruzione e criminalità</a>
-  <a href="#spesa">Spesa pubblica</a>
-  <a href="#famiglie">Famiglie</a>
-  <a href="#asset">Asset e privatizzazioni</a>
-  <a href="#aree">Aree politiche</a>
-  <a href="#metodo">Metodo e fonti</a>
-  <span class="spacer"></span>
-  <button class="ctrl-btn" id="accBtn" type="button">Apri tutti</button>
-</div></nav>
-
-<div class="filterbar" role="group" aria-label="Intervallo temporale di analisi"><div class="wrap">
-  <span class="flabel">Intervallo di analisi:</span>
-  <label>dal <select id="fromSel"></select></label>
-  <label>al <select id="toSel"></select></label>
-  <span class="fpresets">
-    <button class="ctrl-btn" type="button" data-r="1900,2025">Tutto</button>
-    <button class="ctrl-btn" type="button" data-r="1900,1945">Regno e fascismo</button>
-    <button class="ctrl-btn" type="button" data-r="1945,1995">Prima Repubblica</button>
-    <button class="ctrl-btn" type="button" data-r="1995,2025">Seconda Repubblica</button>
-  </span>
-  <span class="fnote" id="rangeNote">tutte le statistiche sull'intero periodo</span>
-</div></div>
 
 <main>
 

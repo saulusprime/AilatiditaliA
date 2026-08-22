@@ -457,11 +457,47 @@ function filterTables(){
   });
 }
 
+/* ============ topbar: menù a cascata ============ */
+/* Due menù (Periodo e Sezioni): un clic sul bottone apre/chiude, un clic
+   fuori o Esc chiude tutto; i link delle sezioni chiudono il menù, mentre
+   i controlli del pannello Periodo (select e preimpostati) lo lasciano
+   aperto per permettere più regolazioni consecutive. */
+function initTopbar(){
+  const menus=[...document.querySelectorAll(".topbar .menu")];
+  if(!menus.length)return;
+  function setOpen(m,open){
+    m.classList.toggle("open",open);
+    const b=m.querySelector(".menu-btn");
+    if(b)b.setAttribute("aria-expanded",open?"true":"false");
+  }
+  const closeAll=except=>menus.forEach(m=>{if(m!==except)setOpen(m,false);});
+  menus.forEach(m=>{
+    const btn=m.querySelector(".menu-btn"); if(!btn)return;
+    btn.addEventListener("click",()=>{
+      const open=!m.classList.contains("open");
+      closeAll(m); setOpen(m,open);
+    });
+    m.querySelectorAll(".menu-panel a").forEach(a=>
+      a.addEventListener("click",()=>closeAll(null)));
+  });
+  document.addEventListener("pointerdown",e=>{
+    if(!e.target.closest(".topbar .menu")) closeAll(null);
+  });
+  document.addEventListener("keydown",e=>{
+    if(e.key!=="Escape")return;
+    const open=menus.find(m=>m.classList.contains("open"));
+    closeAll(null);
+    if(open){const b=open.querySelector(".menu-btn"); if(b)b.focus();}
+  });
+}
+
 /* ============ componente intervallo ============ */
 function applyRange(){
   renderAll();
   buildGiudizio();
   filterTables();
+  const lbl=document.getElementById("periodLbl");
+  if(lbl) lbl.textContent=RANGE.from+"–"+RANGE.to;
   const noteEl=document.getElementById("rangeNote");
   if(noteEl){
     const full=RANGE.from===FULL.from&&RANGE.to===FULL.to;
@@ -626,6 +662,7 @@ function boot(data){
   PRIV=data.PRIV; PRIV_GOV=data.PRIV_GOV; AREE_GIUDIZIO=data.AREE_GIUDIZIO;
   T1.forEach(r=>GOV[r.a]=r.g+" — "+r.c);
   buildT1();
+  initTopbar();
   initFilter();
   initTheme();               // chiama renderAll() (grafici + gauges)
   buildGiudizio();
@@ -648,6 +685,7 @@ fetch("data.json",{cache:"no-cache"})
         "del progetto (index.html, style.css, script.js, data.js, data.json) oppure usa la versione online.";
       main.insertBefore(b,main.firstChild);
     }
+    initTopbar();
     initTheme();
     document.querySelectorAll("table").forEach(makeSortable);
     initAccordion();

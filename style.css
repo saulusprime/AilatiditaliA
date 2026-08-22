@@ -53,31 +53,55 @@ a{color:var(--s1);text-decoration:none}
 a:hover{text-decoration:underline}
 .wrap{max-width:1100px;margin:0 auto;padding:0 20px}
 
+/* ---------- topbar ---------- */
+.topbar{position:sticky;top:0;z-index:60;background:var(--page);
+  border-bottom:1px solid var(--grid)}
+.topbar .wrap{display:flex;flex-wrap:wrap;align-items:center;gap:8px;
+  padding-top:8px;padding-bottom:8px}
+.brand{margin-right:auto;display:flex;align-items:center;border-radius:8px}
+.brand img{display:block;height:40px;width:auto;border-radius:7px}
+.brand:focus-visible{outline:2px solid var(--s1);outline-offset:2px}
+
+/* menù a cascata */
+.menu{position:relative}
+.menu-btn .caret{display:inline-block;font-size:.8em;margin-left:2px;
+  transition:transform .15s ease;transform:rotate(90deg)}
+.menu.open .menu-btn .caret{transform:rotate(-90deg)}
+.menu.open .menu-btn{color:var(--ink-1);border-color:var(--s1)}
+.menu-panel{display:none;position:absolute;top:calc(100% + 8px);right:0;
+  background:var(--tile);border:1px solid var(--border);border-radius:12px;
+  box-shadow:0 10px 28px rgba(0,0,0,.16);padding:8px;z-index:70;
+  max-width:min(340px,calc(100vw - 24px))}
+.menu.open .menu-panel{display:block}
+.menu-list{min-width:220px}
+.menu-list a{display:block;padding:8px 12px;border-radius:8px;
+  color:var(--ink-2);font-size:.9rem;white-space:nowrap}
+.menu-list a:hover{background:var(--wash-a);color:var(--ink-1);text-decoration:none}
+.menu-sep{border:none;border-top:1px solid var(--grid);margin:8px 4px}
+.menu-list .ctrl-btn{width:100%}
+
+/* pannello dell'intervallo */
+.period-panel{min-width:255px;padding:12px}
+.period-panel .flabel{display:block;font-weight:600;font-size:.88rem;margin-bottom:8px}
+.period-panel .frow{display:flex;gap:12px;margin-bottom:10px}
+.period-panel label{font-size:.85rem;color:var(--ink-2);display:inline-flex;gap:6px;align-items:center}
+.period-panel select{font:inherit;font-size:.85rem;background:var(--tile);color:var(--ink-1);
+  border:1px solid var(--border);border-radius:8px;padding:4px 8px}
+.fpresets{display:grid;gap:6px}
+.fpresets .ctrl-btn{width:100%;text-align:left}
+.fpresets .ctrl-btn.active{border-color:var(--s1);color:var(--s1)}
+.fnote{font-size:.8rem;color:var(--ink-3);margin:10px 2px 2px;max-width:34ch}
+
+@media (max-width:640px){
+  .brand img{height:34px}
+  .menu-panel{right:auto;left:0}
+}
+
 /* ---------- testata ---------- */
-header.site{padding:40px 0 8px}
+header.site{padding:30px 0 8px;scroll-margin-top:64px}
 header.site h1{font-size:1.9rem;line-height:1.2;margin:0 0 6px}
 header.site .sub{color:var(--ink-2);max-width:70ch;margin:0}
 .meta-line{color:var(--ink-3);font-size:.85rem;margin-top:10px}
-
-nav.toc{position:sticky;top:0;z-index:50;background:var(--page);
-  border-bottom:1px solid var(--grid);margin-top:18px}
-nav.toc .wrap{display:flex;gap:2px;align-items:center;overflow-x:auto;
-  padding-top:6px;padding-bottom:6px}
-nav.toc a{white-space:nowrap;padding:6px 11px;border-radius:8px;
-  color:var(--ink-2);font-size:.88rem}
-nav.toc a:hover{background:var(--wash-a);text-decoration:none;color:var(--ink-1)}
-nav.toc .spacer{flex:1}
-
-/* ---------- barra dell'intervallo ---------- */
-.filterbar{background:var(--surface-1);border-bottom:1px solid var(--grid);padding:10px 0}
-.filterbar .wrap{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
-.filterbar .flabel{font-weight:600;font-size:.88rem}
-.filterbar label{font-size:.85rem;color:var(--ink-2);display:inline-flex;gap:6px;align-items:center}
-.filterbar select{font:inherit;font-size:.85rem;background:var(--tile);color:var(--ink-1);
-  border:1px solid var(--border);border-radius:8px;padding:4px 8px}
-.fpresets{display:inline-flex;gap:6px;flex-wrap:wrap}
-.fpresets .ctrl-btn.active{border-color:var(--s1);color:var(--s1)}
-.fnote{font-size:.8rem;color:var(--ink-3);margin-left:auto}
 .chart-empty{padding:44px 16px;text-align:center;color:var(--ink-3);font-size:.9rem;
   border:1px dashed var(--grid);border-radius:10px}
 .load-error{margin:20px auto;max-width:1060px;padding:12px 16px;border:1px solid var(--neg);
@@ -87,6 +111,10 @@ nav.toc .spacer{flex:1}
 section{scroll-margin-top:64px;padding:34px 0 6px}
 section>.wrap>h2{font-size:1.35rem;margin:0 0 4px}
 details.chapter{scroll-margin-top:64px;border-bottom:1px solid var(--grid)}
+/* su schermi stretti la topbar va su due righe: più margine di scroll */
+@media (max-width:640px){
+  section,details.chapter,header.site{scroll-margin-top:104px}
+}
 details.chapter>summary{list-style:none;cursor:pointer;padding:20px 0;
   display:block;position:relative}
 details.chapter>summary::-webkit-details-marker{display:none}
@@ -188,7 +216,6 @@ h3.tblh{margin:26px 0 0;font-size:1.05rem}
 .ctrl-btn{background:var(--tile);color:var(--ink-2);border:1px solid var(--border);
   border-radius:9px;padding:5px 12px;font:inherit;font-size:.82rem;cursor:pointer;white-space:nowrap}
 .ctrl-btn:hover{color:var(--ink-1)}
-.theme-btn{float:right;margin-top:6px}
 
 /* ---------- footer ---------- */
 footer{padding:36px 0 46px;color:var(--ink-3);font-size:.84rem;
