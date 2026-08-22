@@ -1,0 +1,58 @@
+name: Problema sul sito
+description: Qualcosa non funziona o non si vede correttamente nella pagina.
+title: "[sito] "
+labels: ["sito"]
+body:
+  - type: textarea
+    id: cosa
+    attributes:
+      label: Che cosa succede
+      placeholder: "Selezionando l'intervallo 1900–1945, il grafico della spesa resta vuoto."
+    validations:
+      required: true
+
+  - type: textarea
+    id: passi
+    attributes:
+      label: Come riprodurlo
+      value: |
+        1. Apro …
+        2. Seleziono …
+        3. Vedo …
+    validations:
+      required: true
+
+  - type: textarea
+    id: atteso
+    attributes:
+      label: Che cosa ti aspettavi
+    validations:
+      required: false
+
+  - type: dropdown
+    id: apertura
+    attributes:
+      label: Come hai aperto la pagina
+      options:
+        - Sito pubblicato (saulusprime.github.io)
+        - Server locale (python3 -m http.server)
+        - Doppio clic su index.html (file://)
+    validations:
+      required: true
+
+  - type: input
+    id: ambiente
+    attributes:
+      label: Browser, sistema operativo e tema
+      placeholder: "Firefox 141, Ubuntu 24.04, tema scuro, finestra 1280px"
+    validations:
+      required: true
+
+  - type: textarea
+    id: console
+    attributes:
+      label: Errori in console
+      description: Se ce ne sono, incollali qui. Si aprono con F12 → Console.
+      render: text
+    validations:
+      required: false

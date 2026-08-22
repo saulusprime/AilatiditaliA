@@ -1,0 +1,44 @@
+name: Metodo, pesi o interpretazione
+description: Una critica al modo in cui i dati sono aggregati, pesati o commentati.
+title: "[metodo] "
+labels: ["metodo", "discussione"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        I pesi del giudizio ponderato sono una scelta editoriale, dichiarata proprio
+        perché sia contestabile. Valgono le regole del
+        [Codice di condotta](https://github.com/saulusprime/AilatiditaliA/blob/main/CODE_OF_CONDUCT.md): si contesta un
+        criterio, non una parte politica.
+
+  - type: dropdown
+    id: ambito
+    attributes:
+      label: Che cosa contesti
+      options:
+        - I pesi delle categorie del giudizio ponderato
+        - Il metodo di punteggio (ranghi anziché valori assoluti)
+        - La delimitazione delle aree politiche o delle loro finestre
+        - La scala del malus sulle cessioni di asset (0–3)
+        - Il commento o l'interpretazione di una fase storica
+        - Altro
+    validations:
+      required: true
+
+  - type: textarea
+    id: critica
+    attributes:
+      label: La critica
+      description: Che cosa non convince, e perché.
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternativa
+    attributes:
+      label: Alternativa proposta
+      description: |
+        Che cosa faresti al suo posto, e quale effetto avrebbe sul risultato. Una
+        proposta con un effetto stimato vale molto più di una senza.
+    validations:
+      required: false

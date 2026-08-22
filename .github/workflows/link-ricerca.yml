@@ -1,0 +1,28 @@
+name: Link della ricerca
+
+# Le fonti sono il fondamento del progetto: se un URL del §12 muore, va sostituito
+# con una copia stabile (Wayback Machine) prima che il dato diventi non verificabile.
+# Gira una volta al mese, non a ogni push: è un controllo di manutenzione, non un test.
+
+on:
+  schedule:
+    - cron: "0 6 1 * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  fonti:
+    name: Raggiungibilità delle fonti
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Controlla gli URL citati nella ricerca
+        run: python3 tools/check_links.py efficacia_governi_italiani_1900_2025.md

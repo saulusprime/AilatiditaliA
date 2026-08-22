@@ -345,7 +345,7 @@ Sulla nuova sezione asset (§6–7) valgono tre cautele: gli **incassi nominali 
 
 **Governi:**
 - Wikipedia (it), voci dei singoli governi (verificate su wikitext originale) e liste — https://it.wikipedia.org/wiki/Governi_della_Repubblica_Italiana ; https://it.wikipedia.org/wiki/Governi_del_Regno_d%27Italia
-- Portale storico della Camera dei deputati — https://storia.camera.it/governi
+- Portale storico della Camera dei deputati — https://storia.camera.it/
 
 **Istruzione:**
 - ISTAT, "Storie di dati n.1 – Il lungo cammino dell'istruzione" (analfabetismo ai censimenti 1861–2024) — https://www.istat.it/wp-content/uploads/2026/02/Storie_di_dati_1-Istruzione.pdf
@@ -381,7 +381,7 @@ Sulla nuova sezione asset (§6–7) valgono tre cautele: gli **incassi nominali 
 - G. Bel, "The first privatisation: selling SOEs and privatising public monopolies in Fascist Italy (1922–1925)", Cambridge Journal of Economics 35(5), 2011 (working paper EUI RSCAS 2009/46) — https://cadmus.eui.eu/handle/1814/12319
 - Ministero del Tesoro, "Libro bianco sulle privatizzazioni", aprile 2001 — https://www.de.mef.gov.it/export/sites/sitode/modules/documenti_it/finanza_privatizzazioni/finanza_privatizzazioni/Libro_bianco_privatizzazioni_4603028-1-136.pdf
 - Camera dei deputati, dossier "Le privatizzazioni" (XV legislatura, BI0145) — https://documenti.camera.it/leg15/dossier/testi/BI0145.htm
-- Corte dei Conti, "Obiettivi e risultati delle operazioni di privatizzazione di partecipazioni pubbliche", relazione 12/2/2010 — https://corteconti.it (sintesi: https://www.uil.it/Documents/concorrenza2010.pdf)
+- Corte dei Conti, "Obiettivi e risultati delle operazioni di privatizzazione di partecipazioni pubbliche", relazione 12/2/2010 — https://www.corteconti.it (sintesi: https://www.uil.it/Documents/concorrenza2010.pdf)
 - NENS, "La fine ingloriosa delle cartolarizzazioni immobiliari" (SCIP 1 e 2) — https://www.nens.it/archivio/la-fine-ingloriosa-delle-cartolarizzazioni-immobiliari
 - MEF, comunicati sulle dismissioni 2015–2024 (ENEL 2015, Poste 2015, ENAV 2016, MPS 2023–24, ENI 2024) — https://www.mef.gov.it/ufficio-stampa/
 - Area Studi Mediobanca, studio sul costo di Alitalia 1974–2014 (7,4 mld €) — via https://www.agi.it/fact-checking/alitalia_calenda_7_miliardi_e_mezzo_in_40_anni_studio_medio_banca-1716863/news/2017-04-26/ ; Il Sole 24 Ore, "Salvataggi Alitalia: allo Stato un conto da 8,6 miliardi"

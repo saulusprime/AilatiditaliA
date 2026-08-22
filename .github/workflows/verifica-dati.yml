@@ -1,0 +1,55 @@
+name: Verifica dati
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  dati:
+    name: data.json e data.js
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Controlli strutturali su data.json
+        run: python3 tools/validate_data.py
+
+      - name: data.js allineato a data.json
+        run: python3 tools/build_data_js.py --check
+
+      - name: I file del sito sono al loro posto
+        run: |
+          set -e
+          for f in index.html style.css script.js data.json data.js logo.png .nojekyll; do
+            test -f "$f" || { echo "::error::manca $f, necessario alla pubblicazione"; exit 1; }
+          done
+          echo "Tutti i file necessari alla pubblicazione sono presenti."
+
+      - name: Nessuna risorsa esterna nella pagina
+        run: |
+          set -e
+          # Il sito deve restare autosufficiente: nessun CDN, nessun font remoto,
+          # nessuna chiamata di rete verso altri domini. I collegamenti <a href> alle
+          # fonti sono ovviamente leciti: qui si cercano solo le risorse caricate.
+          if grep -nEi 'src="https?://' index.html script.js; then
+            echo "::error::una risorsa viene caricata da un dominio esterno."
+            exit 1
+          fi
+          if grep -nEi '<link[^>]+href="https?://' index.html; then
+            echo "::error::index.html collega un foglio di stile o un font esterno."
+            exit 1
+          fi
+          if grep -nE 'fetch\(["'"'"']https?://|XMLHttpRequest' script.js; then
+            echo "::error::script.js effettua una chiamata di rete esterna."
+            exit 1
+          fi
+          echo "Il sito non carica nulla da domini esterni."

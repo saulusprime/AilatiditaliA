@@ -1,0 +1,34 @@
+cff-version: 1.2.0
+title: "Efficacia dei governi italiani, 1900–2025"
+message: "Se usi questi dati o questa ricerca, cita il lavoro come indicato di seguito."
+type: dataset
+authors:
+  - name: "saulusprime"
+    website: "https://github.com/saulusprime"
+repository-code: "https://github.com/saulusprime/AilatiditaliA"
+url: "https://saulusprime.github.io/AilatiditaliA/"
+abstract: >-
+  Confronto dei governi italiani dal 1900 al 2025 su finestre quinquennali,
+  costruito interamente su fonti aperte e ufficiali (Maddison Project Database,
+  Eurostat, ISTAT, SIPRI, Banca d'Italia, MEF, Corte dei Conti, OCSE). Copre
+  crescita economica, debito pubblico, istruzione, criminalità, spesa pubblica,
+  reddito e consumi delle famiglie, cessioni di asset statali e nazionalizzazioni.
+  Ogni valore è tracciato alla propria fonte; dove il dato non è verificabile su
+  fonti aperte è marcato come non disponibile anziché stimato. Include una
+  valutazione ponderata per area politica con pesi dichiarati, un'analisi del
+  rischio "svendita" del patrimonio pubblico secondo cinque criteri verificabili,
+  e un elenco esplicito delle correzioni applicate alle versioni precedenti.
+keywords:
+  - Italia
+  - storia economica
+  - governi italiani
+  - debito pubblico
+  - privatizzazioni
+  - spesa pubblica
+  - dati aperti
+  - PIL pro capite
+  - Maddison Project Database
+license: CC-BY-4.0
+license-url: "https://creativecommons.org/licenses/by/4.0/"
+version: "2.1"
+date-released: "2026-08-16"

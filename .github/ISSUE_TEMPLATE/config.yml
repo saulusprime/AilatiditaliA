@@ -1,0 +1,11 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Consulta il sito
+    url: https://saulusprime.github.io/AilatiditaliA/
+    about: La versione pubblicata, sempre allineata al ramo main.
+  - name: Leggi la ricerca completa
+    url: https://github.com/saulusprime/AilatiditaliA/blob/main/efficacia_governi_italiani_1900_2025.md
+    about: Tabelle, analisi per fase storica, correzioni già applicate (§10), limiti (§11) e fonti (§12).
+  - name: Segnala una vulnerabilità
+    url: https://github.com/saulusprime/AilatiditaliA/security/advisories/new
+    about: Canale privato. Non aprire una issue pubblica per le vulnerabilità.

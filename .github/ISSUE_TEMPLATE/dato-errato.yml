@@ -1,0 +1,72 @@
+name: Segnalazione di un dato
+description: Un valore pubblicato non corrisponde alla fonte ufficiale.
+title: "[dato] "
+labels: ["dati", "da verificare"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        È il contributo più prezioso per questo progetto. Serve una cosa sola, ma
+        è indispensabile: **la fonte primaria**. Vedi
+        [CONTRIBUTING.md](https://github.com/saulusprime/AilatiditaliA/blob/main/CONTRIBUTING.md#che-cosa-conta-come-fonte-accettabile)
+        per quali fonti sono accettabili.
+
+  - type: input
+    id: posizione
+    attributes:
+      label: Dove si trova il valore
+      description: Tabella e anno, oppure la chiave in data.json.
+      placeholder: "Tabella 3, spesa pubblica totale 2024 — oppure: data.json → SPESA2.tot"
+    validations:
+      required: true
+
+  - type: input
+    id: attuale
+    attributes:
+      label: Valore attualmente pubblicato
+      placeholder: "50,4"
+    validations:
+      required: true
+
+  - type: input
+    id: corretto
+    attributes:
+      label: Valore corretto
+      description: Se il dato non è verificabile su fonti aperte, scrivi "N/D".
+      placeholder: "51,2"
+    validations:
+      required: true
+
+  - type: textarea
+    id: fonte
+    attributes:
+      label: Fonte primaria
+      description: |
+        URL, e come si arriva al numero: codice del dataset, filtri applicati,
+        pagina o tavola del PDF, data di consultazione.
+      placeholder: |
+        Eurostat gov_10a_main — https://ec.europa.eu/eurostat/databrowser/view/gov_10a_main
+        Filtri: unit = PC_GDP, sector = S13, na_item = TE, geo = IT, time = 2024
+        Consultato il 22/08/2026, vintage aprile 2026.
+    validations:
+      required: true
+
+  - type: textarea
+    id: note
+    attributes:
+      label: Note
+      description: |
+        Rotture di serie, revisioni, definizioni non confrontabili, differenze tra
+        fonti che danno valori diversi per lo stesso anno.
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: verifica
+    attributes:
+      label: Prima di aprire
+      options:
+        - label: Ho controllato che la correzione non sia già nel §10 della ricerca.
+          required: true
+        - label: La fonte che indico è aperta e consultabile da chiunque.
+          required: true

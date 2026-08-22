@@ -1,0 +1,12 @@
+# Il sito non ha dipendenze: l'unica cosa da tenere aggiornata sono le action
+# usate dai workflow (checkout, setup-python).
+version: 2
+updates:
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "monthly"
+    commit-message:
+      prefix: "ci"
+    labels:
+      - "ci"
